@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halloween Specter Tetris</title>
+    <!-- Tailwind CSS 로드 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 기깔나는 할로윈 폰트 (Griffy) 로드 (더 귀여운 폰트로 변경!) -->
+    <link href="https://fonts.googleapis.com/css2?family=Griffy&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Griffy', cursive; /* 폰트 변경! */
+            overflow: hidden; /* 스크롤 방지 */
+            background: linear-gradient(180deg, #0d0a1a 0%, #310b4a 100%); /* 어둡고 보라색인 배경 */
+        }
+        canvas {
+            background-color: #1a1a1a;
+            display: block;
+            border: 4px dashed #ff6600; /* 할로윈 주황색 점선 */
+            box-shadow: 0 0 25px #ff6600, inset 0 0 10px #000;
+        }
+        .hidden { display: none; }
+        /* 일반 텍스트용 폰트 (가독성) */
+        .normal-text {
+            font-family: 'Inter', sans-serif; /* Tailwind 기본 폰트 */
+        }
+    </style>
+</head>
+<body class="text-white min-h-screen flex flex-col items-center justify-center p-4">
+
+    <div class="w-full max-w-sm text-center">
+        <h1 class="text-5xl font-bold text-orange-500 mb-2">Halloween Specters</h1>
+        <!-- 부제 위치를 캔버스 아래로 이동! -->
+        <!-- <p class="text-2xl text-purple-300 mb-4">"보름달이 뜨면 그들이 온다! 도전해볼래?" 🌕</p> -->
+
+        <div class="flex justify-between text-3xl mb-2 text-lime-400">
+            <span>Score: <span id="score">0</span></span>
+            <!-- NEW: 레벨(단계) 표시 -->
+            <span>Level: <span id="level">1</span></span>
+        </div>
+
+        <!-- 게임 캔버스 -->
+        <canvas id="gameCanvas" width="300" height="600" class="rounded-lg"></canvas>
+
+        <!-- NEW: 부제 위치 이동! (캔버스 바로 아래) -->
+        <p class="text-2xl text-purple-300 mt-4">"보름달이 뜨면 그들이 온다! 도전해볼래?" 🌕</p>
+
+        <!-- NEW: Janesays 홍보! '기깔나게' 갑시다! -->
+        <div class="mt-4 text-lime-400 text-xl">
+            Created by <a href="https://www.youtube.com/@JANESayS" target="_blank" class="hover:text-orange-500 underline">JANESayS</a>
+            <p class="text-sm normal-text text-gray-400">(Click to listen to the original soundtrack!)</p>
+        </div>
+
+        <!-- 게임 오버 메시지 -->
+        <div id="game-over" class="hidden absolute inset-0 bg-black bg-opacity-80 flex flex-col justify-center items-center">
+            <h2 class="text-7xl font-bold text-red-600">GAME OVER</h2>
+            <p class="text-4xl mt-4">Score: <span id="finalScore">0</span></p>
+            <button id="restartButton" class="mt-8 px-8 py-4 bg-orange-500 text-gray-900 font-bold rounded-lg shadow-lg hover:bg-orange-400 transition-all text-4xl">
+                Restart
+            </button>
+        </div>
+
+        <!-- NEW: 레벨 업! "Are You Ready?" 모달 -->
+        <div id="level-up" class="hidden absolute inset-0 bg-black bg-opacity-80 flex flex-col justify-center items-center text-center p-4">
+            <div class="text-8xl mb-4">💀</div> <!-- 호박 🎃이나 해골 💀 -->
+            <h2 class="text-6xl font-bold text-lime-400">LEVEL <span id="nextLevel">2</span></h2>
+            <p class="text-5xl mt-4 text-white">Are You Ready?</p>
+        </div>
+
+        <!-- NEW: 레벨 20 격파! '기깔나는' 엔딩! -->
+        <div id="game-win" class="hidden absolute inset-0 bg-black bg-opacity-80 flex flex-col justify-center items-center text-center p-4">
+            <div class="text-9xl mb-4">🇰🇷💀</div> <!-- 한복 스켈레톤 (임시 이모지) -->
+            <h2 class="text-6xl font-bold text-orange-500">YOU WIN!</h2>
+            <p class="text-4xl mt-4 text-lime-400">"스켈레탈의 세레나데를 부르는 중..." 🎶</p>
+            <button id="restartButtonWin" class="mt-8 px-8 py-4 bg-orange-500 text-gray-900 font-bold rounded-lg shadow-lg hover:bg-orange-400 transition-all text-4xl">
+                Play Again?
+            </button>
+        </div>
+    </div>
+    
+    <!-- TODO: JANESAYS님의 '할로윈 노래' 배경음악으로 넣기! -->
+    <!-- <audio id="bgMusic" src="YOUR_HALLOWEEN_SONG.mp3" loop></audio> -->
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // UI 요소
+        const scoreEl = document.getElementById('score');
+        const levelEl = document.getElementById('level'); // NEW: 레벨 UI
+        const gameOverEl = document.getElementById('game-over');
+        const finalScoreEl = document.getElementById('finalScore');
+        const restartButton = document.getElementById('restartButton');
+        // --- NEW: 신규 UI 요소 ---
+        const levelUpEl = document.getElementById('level-up');
+        const nextLevelEl = document.getElementById('nextLevel');
+        const gameWinEl = document.getElementById('game-win');
+        const restartButtonWin = document.getElementById('restartButtonWin');
+        // --- END NEW ---
+
+        // 게임 보드 설정
+        const COLS = 10;
+        const ROWS = 20;
+        const BLOCK_SIZE = 30; // 300 / 10
+
+        let board = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
+        let score = 0;
+        let gameOver = false;
+        let gamePaused = false; // NEW: 게임 일시정지 (레벨 업 모달용)
+        let dropInterval = 700; // 0.7초로 속도 UP! (이제 레벨에 따라 바뀜)
+        let level = 1; // NEW: 레벨 변수
+        let linesClearedTotal = 0; // NEW: 레벨업을 위한 총 라인 수
+
+        // 몬스터 블록 (Tetrominoes)
+        const SHAPES = [
+            [[1, 1, 1, 1]], // I (Wolfman 🐺)
+            [[1, 1], [1, 1]], // O (Pumpkin 🎃)
+            [[0, 1, 0], [1, 1, 1]], // T (Skeletal 💀)
+            [[1, 0, 0], [1, 1, 1]], // J (Siren 🧜)
+            [[0, 0, 1], [1, 1, 1]], // L (Vampire 🧛)
+            [[1, 1, 0], [0, 1, 1]], // S (Zombie 🧟)
+            [[0, 1, 1], [1, 1, 0]]  // Z (Ghost 👻)
+        ];
+
+        // 기깔나는 몬스터 색상 (-> 이모지로 대체!)
+        const EMOJIS = [
+            null, // 0은 빈 칸
+            '🐺', // 1: Wolfman
+            '🎃', // 2: Pumpkin
+            '💀', // 3: Skeletal
+            '🧜', // 4: Siren
+            '🧛', // 5: Vampire
+            '🧟', // 6: Zombie
+            '👻'  // 7: Ghost
+        ];
+        
+        let currentPiece;
+
+        class Piece {
+            constructor(shape, colorIndex) {
+                this.shape = shape;
+                // this.color = COLORS[colorIndex]; // 이모지를 사용하므로 색상 제거
+                this.colorIndex = colorIndex; // 보드에 저장할 값
+                this.x = Math.floor(COLS / 2) - Math.floor(this.shape[0].length / 2);
+                this.y = 0;
+            }
+
+            draw() {
+                // ctx.fillStyle = this.color; // 이모지로 대체
+                // ctx.shadowColor = this.color; // 이모지로 대체
+                // ctx.shadowBlur = 10; // 이모지로 대체
+                ctx.font = `${BLOCK_SIZE * 0.9}px Arial`; // 이모지 폰트 크기
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                const emoji = EMOJIS[this.colorIndex];
+
+                this.shape.forEach((row, y) => {
+                    row.forEach((value, x) => {
+                        if (value > 0) {
+                            // ctx.fillRect((this.x + x) * BLOCK_SIZE, (this.y + y) * BLOCK_SIZE, BLOCK_SIZE - 1, BLOCK_SIZE - 1); // 사각형 대신 텍스트(이모지)
+                            const drawX = (this.x + x) * BLOCK_SIZE + BLOCK_SIZE / 2;
+                            const drawY = (this.y + y) * BLOCK_SIZE + BLOCK_SIZE / 2;
+                            ctx.fillText(emoji, drawX, drawY);
+                        }
+                    });
+                });
+                // ctx.shadowBlur = 0; // 이모지로 대체
+            }
+
+            move(dx, dy) {
+                if (!this.isValid(this.x + dx, this.y + dy, this.shape)) {
+                    if (dy === 1) { // 아래로 이동 중 충돌
+                        this.lock();
+                        spawnNewPiece();
+                    }
+                    return; // 이동 불가
+                }
+                this.x += dx;
+                this.y += dy;
+            }
+
+            rotate() {
+                const newShape = [];
+                // 90도 시계방향 회전
+                for (let y = 0; y < this.shape[0].length; y++) {
+                    newShape[y] = [];
+                    for (let x = 0; x < this.shape.length; x++) {
+                        newShape[y][x] = this.shape[this.shape.length - 1 - x][y];
+                    }
+                }
+
+                // 회전 시 벽/바닥 충돌 보정
+                let newX = this.x;
+                if (newX < 0) newX = 0; // 왼쪽 벽
+                if (newX + newShape[0].length > COLS) newX = COLS - newShape[0].length; // 오른쪽 벽
+                
+                if (this.isValid(newX, this.y, newShape)) {
+                    this.shape = newShape;
+                    this.x = newX;
+                }
+            }
+
+            isValid(x, y, shape) {
+                for (let r = 0; r < shape.length; r++) {
+                    for (let c = 0; c < shape[r].length; c++) {
+                        if (shape[r][c] > 0) {
+                            let newX = x + c;
+                            let newY = y + r;
+                            
+                            // 벽 충돌
+                            if (newX < 0 || newX >= COLS || newY >= ROWS) return false;
+                            // 바닥이나 다른 블록 충돌
+                            if (newY >= 0 && board[newY][newX] > 0) return false;
+                        }
+                    }
+                }
+                return true;
+            }
+
+            lock() {
+                this.shape.forEach((row, y) => {
+                    row.forEach((value, x) => {
+                        if (value > 0) {
+                            if (this.y + y < 0) {
+                                triggerGameOver(); // 맨 위에 닿으면 게임 오버
+                                return;
+                            }
+                            board[this.y + y][this.x + x] = this.colorIndex;
+                        }
+                    });
+                });
+                clearLines();
+            }
+        }
+
+        function spawnNewPiece() {
+            const rand = Math.floor(Math.random() * SHAPES.length);
+            const colorIndex = rand + 1; // 1~7
+            currentPiece = new Piece(SHAPES[rand], colorIndex);
+
+            if (!currentPiece.isValid(currentPiece.x, currentPiece.y, currentPiece.shape)) {
+                triggerGameOver();
+            }
+        }
+
+        function clearLines() {
+            let linesCleared = 0;
+            for (let y = ROWS - 1; y >= 0; y--) {
+                if (board[y].every(cell => cell > 0)) {
+                    // 줄 삭제 및 맨 위에 새 줄 추가
+                    board.splice(y, 1);
+                    board.unshift(Array(COLS).fill(0));
+                    linesCleared++;
+                    y++; // 삭제했으니 같은 줄 다시 검사
+                }
+            }
+            // 점수 계산 (기깔나게!)
+            if (linesCleared > 0) {
+                score += linesCleared * 100 * linesCleared; // 1줄=100, 2줄=400, 3줄=900, 4줄(텍트리스!)=1600
+                scoreEl.innerText = score;
+
+                // --- NEW: '미친듯한' 난이도(레벨) 조절 시스템 ---
+                linesClearedTotal += linesCleared;
+                const newLevel = Math.floor(linesClearedTotal / 10) + 1;
+                
+                if (newLevel > level) {
+                    level = newLevel;
+
+                    // --- NEW: 레벨 20 격파 (Level 21 도달) ---
+                    if (level > 20) { 
+                        triggerGameWin();
+                        return; // 게임 승리, 루프 중단
+                    }
+                    // --- END NEW ---
+
+                    levelEl.innerText = level;
+                    // 레벨당 50ms씩 속도 증가, 최소 100ms(0.1초)
+                    dropInterval = Math.max(100, 700 - (level - 1) * 50); 
+                    
+                    // --- NEW: "Are You Ready?" 모달 띄우기 ---
+                    showLevelUpModal(level); 
+                }
+                // --- END NEW ---
+            }
+        }
+
+        function drawBoard() {
+            ctx.font = `${BLOCK_SIZE * 0.9}px Arial`; // 이모지 폰트 크기
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            board.forEach((row, y) => {
+                row.forEach((value, x) => {
+                    if (value > 0) { // 보드에 굳어진 블록
+                        // ctx.fillStyle = COLORS[value]; // 이모지로 대체
+                        // ctx.shadowColor = COLORS[value]; // 이모지로 대체
+                        // ctx.shadowBlur = 5; // 이모지로 대체
+                        // ctx.fillRect(x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE - 1, BLOCK_SIZE - 1); // 사각형 대신 텍스트(이모지)
+                        
+                        const emoji = EMOJIS[value];
+                        const drawX = x * BLOCK_SIZE + BLOCK_SIZE / 2;
+                        const drawY = y * BLOCK_SIZE + BLOCK_SIZE / 2;
+                        ctx.fillText(emoji, drawX, drawY);
+                    }
+                });
+            });
+            // ctx.shadowBlur = 0; // 이모지로 대체
+        }
+
+        function triggerGameOver() {
+            gameOver = true;
+            gameOverEl.classList.remove('hidden');
+            finalScoreEl.innerText = score;
+        }
+
+        // --- NEW: 레벨 20 격파! ---
+        function triggerGameWin() {
+            gameOver = true; // 게임 루프를 멈추기 위해
+            gameWinEl.classList.remove('hidden');
+            // TODO: 여기에 '스켈레탈의 세레나데' 재생 코드!
+        }
+
+        // --- NEW: "Are You Ready?" 모달 ---
+        function showLevelUpModal(nextLevel) {
+            gamePaused = true; // 게임 일시정지
+            nextLevelEl.innerText = nextLevel;
+            levelUpEl.classList.remove('hidden');
+
+            // 2초 후에 모달 숨기고 게임 재개
+            setTimeout(() => {
+                levelUpEl.classList.add('hidden');
+                gamePaused = false;
+                requestAnimationFrame(gameLoop); // 일시정지 후 루프 재시작
+            }, 2000); // 2초간 보여주기
+        }
+
+        // 게임 루프
+        let lastTime = 0;
+        let dropCounter = 0;
+        // let dropInterval = 700; // (전역 변수로 이동)
+
+        function gameLoop(time = 0) {
+            if (gameOver || gamePaused) return; // NEW: 일시정지 체크
+
+            const deltaTime = time - lastTime;
+            lastTime = time;
+            dropCounter += deltaTime;
+
+            if (dropCounter > dropInterval) {
+                currentPiece.move(0, 1); // 1칸 아래로
+                dropCounter = 0;
+            }
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawBoard();
+            currentPiece.draw();
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        // 조작 (키보드)
+        document.addEventListener('keydown', (e) => {
+            if (gameOver || gamePaused) return; // NEW: 일시정지 체크
+            
+            if (e.key === 'ArrowLeft' || e.key.toLowerCase() === 'a') {
+                currentPiece.move(-1, 0);
+            } else if (e.key === 'ArrowRight' || e.key.toLowerCase() === 'd') {
+                currentPiece.move(1, 0);
+            } else if (e.key === 'ArrowDown' || e.key.toLowerCase() === 's') {
+                currentPiece.move(0, 1);
+                dropCounter = 0; // 수동으로 내리면 타이머 리셋
+            } else if (e.key === 'ArrowUp' || e.key.toLowerCase() === 'w') {
+                currentPiece.rotate();
+            }
+        });
+        
+        // TODO: 모바일 터치 조작 (스와이프, 탭) 추가
+
+        // 게임 재시작
+        restartButton.addEventListener('click', () => {
+            board = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
+            score = 0;
+            gameOver = false;
+            gamePaused = false; // --- NEW: 리셋 ---
+            dropInterval = 700; // --- NEW: 속도 리셋 ---
+            level = 1; // --- NEW: 레벨 리셋 ---
+            linesClearedTotal = 0; // --- NEW: 총 라인 리셋 ---
+            scoreEl.innerText = '0';
+            levelEl.innerText = '1'; // --- NEW: 레벨 UI 리셋 ---
+            gameOverEl.classList.add('hidden');
+            gameWinEl.classList.add('hidden'); // --- NEW: 승리 화면 숨기기 ---
+            spawnNewPiece();
+            gameLoop();
+        });
+
+        // --- NEW: 승리 화면에서의 재시작 ---
+        restartButtonWin.addEventListener('click', () => {
+            board = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
+            score = 0;
+            gameOver = false;
+            gamePaused = false;
+            dropInterval = 700;
+            level = 1;
+            linesClearedTotal = 0;
+            scoreEl.innerText = '0';
+            levelEl.innerText = '1';
+            gameOverEl.classList.add('hidden');
+            gameWinEl.classList.add('hidden');
+            spawnNewPiece();
+            gameLoop();
+        });
+
+        // 게임 시작
+        spawnNewPiece();
+        gameLoop();
+    </script>
+</body>
+</html>
+
+
+
+
+
+
