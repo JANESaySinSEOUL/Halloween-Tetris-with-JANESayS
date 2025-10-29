@@ -46,9 +46,9 @@
         <!-- NEW: 부제 위치 이동! (캔버스 바로 아래) -->
         <p class="text-2xl text-purple-300 mt-4">"보름달이 뜨면 그들이 온다! 도전해볼래?" 🌕</p>
 
-        <!-- NEW: Janesays 홍보! '기깔나게' 갑시다! -->
+        <!-- NEW: Janesays 홍보! '기깔나게' 갑시다! (링크 '기깔나게' 수정 완료!) -->
         <div class="mt-4 text-lime-400 text-xl">
-            Created by <a href="https://www.youtube.com/@JANESayS" target="_blank" class="hover:text-orange-500 underline">JANESayS</a>
+            Created by <a href="https://www.youtube.com/@JanesaysPalalalaRecords" target="_blank" class="hover:text-orange-500 underline">JANESayS</a>
             <p class="text-sm normal-text text-gray-400">(Click to listen to the original soundtrack!)</p>
         </div>
 
@@ -79,8 +79,11 @@
         </div>
     </div>
     
-    <!-- TODO: JANESAYS님의 '할로윈 노래' 배경음악으로 넣기! -->
-    <!-- <audio id="bgMusic" src="YOUR_HALLOWEEN_SONG.mp3" loop></audio> -->
+    <!-- NEW: '기깔나는' 음소거 버튼! -->
+    <button id="muteButton" class="absolute top-4 right-4 text-3xl opacity-80 hover:opacity-100">🔊</button>
+
+    <!-- NEW: '기깔나는' 배경음악! (song.mp3로 이름 변경!) -->
+    <audio id="bgMusic" src="song.mp3" loop></audio>
 
     <script>
         const canvas = document.getElementById('gameCanvas');
@@ -97,6 +100,12 @@
         const nextLevelEl = document.getElementById('nextLevel');
         const gameWinEl = document.getElementById('game-win');
         const restartButtonWin = document.getElementById('restartButtonWin');
+        // --- END NEW ---
+
+        // --- NEW: '기깔나는' 음악 제어 ---
+        const muteButton = document.getElementById('muteButton');
+        const bgMusic = document.getElementById('bgMusic');
+        let isMuted = false;
         // --- END NEW ---
 
         // 게임 보드 설정
@@ -312,13 +321,15 @@
             gameOver = true;
             gameOverEl.classList.remove('hidden');
             finalScoreEl.innerText = score;
+            bgMusic.pause(); // NEW: 게임 오버 시 음악 정지
         }
 
         // --- NEW: 레벨 20 격파! ---
         function triggerGameWin() {
             gameOver = true; // 게임 루프를 멈추기 위해
             gameWinEl.classList.remove('hidden');
-            // TODO: 여기에 '스켈레탈의 세레나데' 재생 코드!
+            bgMusic.pause(); // NEW: 승리 시 음악 정지 (다른 곡 재생 가능)
+            // TODO: 여기에 '스켈레탈의 세레나데' (다른 버전?) 재생 코드!
         }
 
         // --- NEW: "Are You Ready?" 모달 ---
@@ -377,6 +388,18 @@
         
         // TODO: 모바일 터치 조작 (스와이프, 탭) 추가
 
+        // --- NEW: '기깔나는' 음소거 버튼 로직 ---
+        muteButton.addEventListener('click', () => {
+            isMuted = !isMuted;
+            if (isMuted) {
+                bgMusic.pause();
+                muteButton.innerText = '🔇';
+            } else {
+                bgMusic.play().catch(e => console.error("음악 재생 실패:", e));
+                muteButton.innerText = '🔊';
+            }
+        });
+
         // 게임 재시작
         restartButton.addEventListener('click', () => {
             board = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
@@ -390,6 +413,11 @@
             levelEl.innerText = '1'; // --- NEW: 레벨 UI 리셋 ---
             gameOverEl.classList.add('hidden');
             gameWinEl.classList.add('hidden'); // --- NEW: 승리 화면 숨기기 ---
+            
+            // NEW: 음악 재시작
+            bgMusic.currentTime = 0;
+            if (!isMuted) bgMusic.play();
+
             spawnNewPiece();
             gameLoop();
         });
@@ -407,6 +435,11 @@
             levelEl.innerText = '1';
             gameOverEl.classList.add('hidden');
             gameWinEl.classList.add('hidden');
+
+            // NEW: 음악 재시작
+            bgMusic.currentTime = 0;
+            if (!isMuted) bgMusic.play();
+
             spawnNewPiece();
             gameLoop();
         });
@@ -414,12 +447,13 @@
         // 게임 시작
         spawnNewPiece();
         gameLoop();
+
+        // NEW: '기깔나는' 첫 클릭 시 음악 자동재생 (브라우저 정책 대응)
+        document.body.addEventListener('click', () => {
+            if (!isMuted && bgMusic.paused) {
+                bgMusic.play().catch(e => console.error("음악 재생 실패:", e));
+            }
+        }, { once: true }); // '기깔나게' 한 번만 실행
     </script>
 </body>
 </html>
-
-
-
-
-
-
