@@ -2,125 +2,167 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"> <!-- '기깔나는' 모바일 확대 방지! --><title>Halloween Specter Tetris</title>
-    <!-- Tailwind CSS 로드 --><script src="https://cdn.tailwindcss.com"></script>
-    <!-- ★★★ NEW: '기깔나는' GenZ 폰트 '가즈아!' (Griffy + Gaegu!) ★★★ --><link href="https://fonts.googleapis.com/css2?family=Griffy&family=Gaegu:wght@400;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"> <!-- '기깔나는' 모바일 확대 방지! -->
+    <title>Halloween Specter Tetris</title>
+    <!-- Tailwind CSS 로드 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- ★★★ NEW: '기깔나는' GenZ 폰트 'Gaegu' (개구) '가즈아!' ★★★ -->
+    <link href="https://fonts.googleapis.com/css2?family=Griffy&family=Gaegu:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Griffy', cursive; /* '기깔나는' 영어 제목 폰트! */
+            /* ★★★ NEW: '기깔나는' GenZ 한글 폰트 적용! ★★★ */
+            font-family: 'Gaegu', cursive; 
             overflow: hidden; /* 스크롤 방지 */
             background: linear-gradient(180deg, #0d0a1a 0%, #310b4a 100%); /* 어둡고 보라색인 배경 */
-            /* ★★★ NEW: '기깔나는' 모바일 터치 스크롤 '기깔나게' 싹! 방지 ★★★ */
-            touch-action: none;
+            touch-action: none; /* '기깔나는' 모바일 터치 스크롤 '기깔나게' 싹! 방지 */
+        }
+        /* '기깔나는' 영어 제목 폰트 (Griffy) */
+        .title-font {
+            font-family: 'Griffy', cursive;
         }
         canvas {
             background-color: #1a1a1a;
             display: block;
             border: 4px dashed #ff6600; /* 할로윈 주황색 점선 */
             box-shadow: 0 0 25px #ff6600, inset 0 0 10px #000;
-            margin: 0 auto; /* ★★★ NEW: '기깔나는' 중앙 정렬 '가즈아!' ★★★ */
+            margin: 0 auto; /* '기깔나는' 중앙 정렬 '가즈아!' */
         }
         .hidden { display: none; }
-        /* ★★★ NEW: '기깔나는' GenZ 한글 폰트 '가즈아!' (Gaegu) ★★★ */
+        /* 일반 텍스트용 폰트 (가독성) */
         .normal-text {
-            font-family: 'Gaegu', cursive; /* '기깔나는' GenZ 손글씨 폰트! */
+            font-family: 'Inter', sans-serif; /* Tailwind 기본 폰트 */
         }
     </style>
 </head>
 <body class="text-white min-h-screen flex flex-col items-center justify-center p-4">
 
-    <!-- ★★★ NEW: '기깔나는' 음소거 버튼! (위치 변경!) ★★★ --><button id="muteButton" class="absolute top-4 right-4 text-3xl opacity-80 hover:opacity-100 z-10">🔊</button>
+    <!-- '기깔나는' 음소거 버튼! -->
+    <button id="muteButton" class="absolute top-4 right-4 text-3xl opacity-80 hover:opacity-100 z-10">🔊</button>
 
     <div class="w-full max-w-sm text-center">
-        <h1 class="text-5xl font-bold text-orange-500 mb-2">Halloween Specters</h1>
+        <h1 class="text-5xl font-bold text-orange-500 mb-2 title-font">Halloween Specters</h1>
         
+        <!-- ★★★ NEW: '기깔나는' '가짜' 라이브 통계 '가즈아!' ★★★ -->
+        <div class="flex justify-between text-lg mb-2 text-purple-300">
+            <span>참여: <span id="participants">1337</span>명</span>
+            <span>평균 점수: <span id="avgScore">4500</span>점</span>
+        </div>
+
         <div class="flex justify-between text-3xl mb-2 text-lime-400">
             <span>Score: <span id="score">0</span></span>
             <span>Level: <span id="level">1</span></span>
         </div>
 
-        <!-- 게임 캔버스 (이제 '기깔나게' 중앙 정렬!) --><canvas id="gameCanvas" width="300" height="600" class="rounded-lg"></canvas>
+        <!-- 게임 캔버스 (이제 '기깔나게' 중앙 정렬!) -->
+        <canvas id="gameCanvas" width="300" height="600" class="rounded-lg"></canvas>
 
-        <!-- ★★★ NEW: '기깔나는' 부제 텍스트 + '기깔나는' GenZ 폰트 '가즈아!' ★★★ --><p class="text-2xl text-purple-300 mt-4 normal-text">Moonlight Specters, 보름달이 뜨면 그들이 온다! 🌕</p>
-        <p class="text-2xl text-purple-300 mt-1 normal-text">도전해볼래?</p> <!-- '기깔나는' 한 줄 더 추가! --><div class="mt-4 text-lime-400 text-xl normal-text"> <!-- '기깔나는' GenZ 폰트 적용! -->
-            Created by <a href="https://www.youtube.com/@JanesaysPalalalaRecords" target="_blank" class="hover:text-orange-500 underline">JANESayS</a>
+        <!-- '기깔나는' 부제 (GenZ 폰트 적용!) -->
+        <p class="text-2xl text-purple-300 mt-4">Moonlight Specters, 보름달이 뜨면 그들이 온다! 🌕</p>
+        <p class="text-2xl text-purple-300 mt-1">도전해볼래?</p> 
+
+        <div class="mt-4 text-lime-400 text-xl">
+            Created by <a href="https://www.youtube.com/@JanesaysPalalalaRecords" target="_blank" class="hover:text-orange-500 underline title-font">JANESayS</a>
             <p class="text-sm normal-text text-gray-400">(Click to listen to the original soundtrack!)</p>
         </div>
 
-        <!-- ★★★ '기깔나는' GenZ 멘탈 회복 GameOver 페이지 '가즈아!' ★★★ --><div id="game-over" class="hidden absolute inset-0 bg-black bg-opacity-80 flex flex-col justify-center items-center text-center p-4">
+        <!-- ★★★ NEW: '기깔나는' '멘탈 회복' GameOver '가즈아!' ★★★ -->
+        <div id="game-over" class="hidden absolute inset-0 bg-black bg-opacity-80 flex flex-col justify-center items-center text-center p-4">
+            <h2 class="text-7xl font-bold text-red-600">다시 도전! 🔥</h2>
+            <p class="text-5xl text-white mt-2">할 수 있어요!</p>
             
-            <!-- '기깔나는' 멘탈 회복 헤드라인! --><h2 class="text-7xl font-bold text-lime-400 normal-text">다시 도전! 🔥<br>할 수 있어요!</h2>
-            
-            <!-- 점수 --><p class="text-4xl mt-4 normal-text">Score: <span id="finalScore">0</span></p>
+            <p class="text-4xl mt-4 text-lime-400">Score: <span id="finalScore">0</span></p>
     
-            <!-- '기깔나는' 멘탈 회복 멘트! --><div class="mt-6 text-3xl text-white normal-text">
-                <p>Moonlight Specters는</p>
-                <p class="text-4xl text-purple-300">총 30 Level까지!</p>
-                <p class="mt-4">"스켈레탈 세레나데" 들으면서<br>멘탈 회복하고 다시?!</p>
+            <div class="mt-6 text-3xl text-white normal-text px-4">
+                <p>"Moonlight Specters는 총 30 Level까지!"</p>
+                <p class="text-2xl text-gray-300 mt-2">"'스켈레탈 세레나데' 들으면서<br>멘탈회복하고 다시?!"</p>
             </div>
             
-            <!-- '기깔나는' RESTART 버튼! --><button id="restartButton" class="mt-8 px-10 py-4 bg-orange-500 text-gray-900 font-bold rounded-lg shadow-lg hover:bg-orange-400 transition-all text-5xl normal-text">
+            <button id="restartButton" class="mt-8 px-10 py-4 bg-orange-500 text-gray-900 font-bold rounded-lg shadow-lg hover:bg-orange-400 transition-all text-5xl title-font">
                 RESTART!
             </button>
         </div>
 
-        <div id="level-up" class="hidden absolute inset-0 bg-black bg-opacity-80 flex flex-col justify-center items-center text-center p-4">
-            <div class="text-8xl mb-4">💀</div> 
-            <h2 class="text-6xl font-bold text-lime-400 normal-text">LEVEL <span id="nextLevel">2</span></h2>
-            <p class="text-5xl mt-4 text-white normal-text">Are You Ready?</p>
-        </div>
-
-        <!-- ★★★ '기깔나는' 최종 승리 페이지 (YOU WIN!) (Level 30 '가즈아!') ★★★ --><div id="game-win" class="hidden absolute inset-0 bg-black bg-opacity-80 flex flex-col justify-center items-center text-center p-4" style="background-image: url('moonlight_specters_final_image.jpg'); background-size: cover; background-position: center;">
-            <!-- 메인 제목 --><h1 class="text-5xl font-bold text-white mb-2">Moonlight Specters</h1>
+        <!-- ★★★ NEW: '기깔나는' 1,000원 '페이팔' '양심 페이월' '가즈아!' ★★★ -->
+        <div id="level-10-paywall" class="hidden absolute inset-0 bg-black bg-opacity-80 flex flex-col justify-center items-center text-center p-4">
+            <div class="text-8xl mb-4">🚀</div>
+            <h2 class="text-4xl font-bold text-lime-400">"테트리스 꺠부시기?"</h2>
+            <p class="text-3xl mt-2 text-white">"국민고수 다 놔와서 실력을 보여주세요!"</p>
             
-            <!-- ★★★ NEW: '기깔나는' 영어 타이틀 '가즈아!' ★★★ --><h2 class="text-4xl font-bold text-purple-300 mt-4 normal-text">ARE YOU THE NEXT</h2>
-            <h2 class="text-4xl font-bold text-purple-300 mt-1 normal-text">SPECTER KING / QUEEN? 👑</h2>
-            
-            <!-- 최고 점수와 레벨 --><p class="text-4xl mt-6 text-lime-400 normal-text">최고 점수: <span id="winScore">0</span></p>
-            <p class="text-4xl mt-2 text-lime-400 normal-text">Level: <span id="winLevel">0</span></p>
+            <p class="text-2xl mt-6 text-purple-300 normal-text">Level 10은 '기깔나는' 지옥의 시작...<br>Level 30까지 '가즈아!'</p>
+            <p class="text-xl mt-4 text-white normal-text">"현재 당신의 Score/Ranking을 살펴보세요! 😉"</p>
 
-            <!-- 랭크별 몬스터 (이모지 대신 이미지를 넣어야 더 멋있지만, 일단 텍스트로 대체) --><div class="flex justify-around w-full max-w-sm mt-8">
-                <div class="flex flex-col items-center">
-                    <img src="https://i.ibb.co/q0Vv2Wq/skeleton-rank.png" alt="Skeleton Rank" class="w-20 h-20 mb-2"> <!-- 스켈레톤 이미지 --><span class="text-2xl text-white normal-text">RANK: SKELETON</span>
-                </div>
-                <div class="flex flex-col items-center">
-                    <img src="https://i.ibb.co/6P6Ld5s/spelyman-rank.png" alt="Spelyman Rank" class="w-20 h-20 mb-2"> <!-- 스펠리맨 이미지 --><span class="text-2xl text-white normal-text">RANK: SPELYMAN</span>
-                </div>
+            <div class="mt-8">
+                <a href="https://paypal.me/palalalarecordsJANE" target="_blank" class="px-6 py-4 bg-blue-500 text-white font-bold rounded-lg shadow-lg hover:bg-blue-400 transition-all text-3xl">
+                    Would You Buy Me a Coffee? ☕<br>
+                    <span class="text-2xl">(JANESAYS 1,000원 'Paypal' 후원 '가즈아!')</span>
+                </a>
             </div>
-
-            <!-- BGM by JANESAYS 홍보 버튼 --><a href="https://www.youtube.com/@JanesaysPalalalaRecords" target="_blank" class="mt-8 px-6 py-3 bg-red-600 text-white font-bold rounded-lg shadow-lg hover:bg-red-500 transition-all text-2xl normal-text">
-                BGM by JANESAYS - Click to Listen!
-            </a>
-
-            <!-- GAME Link (다시 시작) --><button id="restartButtonWin" class="mt-4 px-8 py-4 bg-orange-500 text-gray-900 font-bold rounded-lg shadow-lg hover:bg-orange-400 transition-all text-2xl normal-text">
-                GAME Link: Play Again!
-            </button>
             
-            <p class="text-xl text-gray-400 mt-8 normal-text">THANK YOU FOR PLAYING!</p>
-        </div>
-
-        <!-- ★★★ NEW: '기깔나는' 1,000원 '양심 페이월' '가즈아!' (Paypal 1000원!) ★★★ --><div id="paywall-modal" class="hidden absolute inset-0 bg-black bg-opacity-90 flex flex-col justify-center items-center text-center p-4 z-20">
-            <h2 class="text-5xl font-bold text-lime-400 normal-text">테트리스 꺠부시기? 🚀</h2>
-            <p class="text-3xl mt-4 text-white normal-text">국민고수 다 놔와서 실력을 보여주세요!</p>
-            
-            <p class="text-2xl mt-6 text-purple-300 normal-text">Level 10~30 '기깔나는' 고수 모드... '기깔나게' 도전?</p>
-
-            <!-- ★★★ NEW: '기깔나는' Paypal 후원 버튼! '가즈아!' (수정 완료!) ★★★ --><a href="https://paypal.me/palalalarecordsJANE" target="_blank" class="mt-6 inline-block px-8 py-4 bg-yellow-400 text-black font-bold rounded-lg shadow-lg hover:bg-yellow-300 transition-all text-3xl normal-text">
-                JANESAYS 1,000원 'Paypal' 후원 '가즈아!' 🚀
-            </a>
-
-            <!-- '기깔나는' 그냥 계속하기 버튼 (양심!) --><button id="continueButton" class="mt-4 px-6 py-2 text-gray-400 hover:text-white transition-all text-xl underline normal-text">
+            <button id="continueButton" class="mt-6 px-8 py-3 bg-gray-600 text-white font-bold rounded-lg hover:bg-gray-500 transition-all text-2xl normal-text">
                 ...다음에 (그냥 계속하기)
             </button>
         </div>
+
+
+        <!-- '기깔나는' 레벨 업 (Are You Ready?) -->
+        <div id="level-up" class="hidden absolute inset-0 bg-black bg-opacity-80 flex flex-col justify-center items-center text-center p-4">
+            <div class="text-8xl mb-4">💀</div> 
+            <h2 class="text-6xl font-bold text-lime-400 title-font">LEVEL <span id="nextLevel">2</span></h2>
+            <p class="text-5xl mt-4 text-white">Are You Ready?</p>
+        </div>
+
+        <!-- ★★★ NEW: '기깔나는' Level 30 '승리' 화면 '가즈아!' ★★★ -->
+        <div id="game-win" class="hidden absolute inset-0 bg-black bg-opacity-70 flex flex-col justify-center items-center text-center p-4 bg-cover bg-center" style="background-image: url('win_bg.jpg');">
+            <!-- '기깔나는' 배경 이미지를 '기깔나게' 덮는 '기깔나는' 반투명 '기깔나는' 오버레이 -->
+            <div class="absolute inset-0 bg-black bg-opacity-60 z-0"></div>
+            
+            <!-- '기깔나는' 콘텐츠 (z-10으로 '기깔나게' 위로!) -->
+            <div class="relative z-10 w-full">
+                <h1 class="text-5xl font-bold text-orange-500 mb-2 title-font">Moonlight Specters</h1>
+                
+                <!-- ★★★ NEW: '기깔나는' King/Queen '가즈아!' ★★★ -->
+                <h2 class="text-4xl font-bold text-purple-300 mt-4 title-font">ARE YOU THE NEXT</h2>
+                <h2 class="text-4xl font-bold text-purple-300 mt-1 title-font">SPECTER KING / QUEEN? 👑</h2>
+                
+                <p class="text-4xl mt-6 text-lime-400">최고 점수: <span id="winScore">0</span></p>
+                <p class="text-4xl mt-2 text-lime-400">Level: <span id="winLevel">0</span></p>
+
+                <!-- '기깔나는' 랭크 (임시 '기깔나는' 이미지!) -->
+                <div class="flex justify-around w-full max-w-xs mt-6">
+                    <div class="flex flex-col items-center">
+                        <span class="text-6xl">💀</span>
+                        <span class="text-2xl text-white mt-2">RANK: SKELETON</span>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <span class="text-6xl">🐺</span>
+                        <span class="text-2xl text-white mt-2">RANK: WOLFMAN</span>
+                    </div>
+                </div>
+
+                <!-- ★★★ NEW: '기깔나는' 굿즈 '가즈아!' ★★★ -->
+                <p class="text-xl text-gray-300 mt-6 normal-text px-2">
+                    "KING / QUEEN이 되신 분들은<br>JANESAYS Page에 Rank Page를 포함시켜 축하해드리고,<br>굿즈도 보내드릴 예정입니다!"
+                </p>
+
+                <a href="https://www.youtube.com/@JanesaysPalalalaRecords" target="_blank" class="mt-6 inline-block px-6 py-3 bg-red-600 text-white font-bold rounded-lg shadow-lg hover:bg-red-500 transition-all text-2xl normal-text">
+                    BGM by JANESAYS - Click to Listen!
+                </a>
+
+                <button id="restartButtonWin" class="mt-4 block w-4/5 mx-auto px-8 py-4 bg-orange-500 text-gray-900 font-bold rounded-lg shadow-lg hover:bg-orange-400 transition-all text-3xl title-font">
+                    GAME Link: Play Again!
+                </button>
+            </div>
+        </div>
     </div>
     
+    <!-- '기깔나는' 4곡 믹스테잎 '가즈아!' -->
     <audio id="bgMusic" preload="auto"></audio>
 
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
 
+        // '기깔나는' UI 요소 '가즈아!'
         const scoreEl = document.getElementById('score');
         const levelEl = document.getElementById('level'); 
         const gameOverEl = document.getElementById('game-over');
@@ -130,20 +172,24 @@
         const nextLevelEl = document.getElementById('nextLevel');
         const gameWinEl = document.getElementById('game-win');
         const restartButtonWin = document.getElementById('restartButtonWin');
-        const winScoreEl = document.getElementById('winScore');
-        const winLevelEl = document.getElementById('winLevel');
+        const winScoreEl = document.getElementById('winScore'); // '기깔나는' 승리 점수
+        const winLevelEl = document.getElementById('winLevel'); // '기깔나는' 승리 레벨
+        const paywallEl = document.getElementById('level-10-paywall'); // '기깔나는' 1,000원 페이월
+        const continueButton = document.getElementById('continueButton'); // '기깔나는' 그냥 계속하기 버튼
 
-        // ★★★ NEW: '기깔나는' 페이월 UI '가즈아!' ★★★
-        const paywallModal = document.getElementById('paywall-modal');
-        const continueButton = document.getElementById('continueButton');
-        let paywallShown = false; // '기깔나는' 팝업 한 번만!
-        // ★★★ END NEW ★★★
+        // ★★★ NEW: '기깔나는' '가짜' 라이브 통계 '가즈아!' ★★★
+        const participantsEl = document.getElementById('participants');
+        const avgScoreEl = document.getElementById('avgScore');
+        let fakeParticipants = 1337;
+        let fakeAvgScore = 4500;
+        // --- END NEW ---
 
+        // '기깔나는' 음악 제어 '가즈아!'
         const muteButton = document.getElementById('muteButton');
         const bgMusic = document.getElementById('bgMusic');
         let isMuted = false;
 
-        // ★★★ '기깔나는' 4곡 믹스테잎 '가즈아!' ★★★
+        // '기깔나는' 4곡 믹스테잎 '가즈아!'
         const playlist = [
             'song.mp3',  
             'song1.mp3', 
@@ -152,6 +198,7 @@
         ];
         let currentTrackIndex = 0;
 
+        // '기깔나는' 게임 보드 '가즈아!'
         const COLS = 10;
         const ROWS = 20;
         const BLOCK_SIZE = 30; 
@@ -163,7 +210,9 @@
         let dropInterval = 700; 
         let level = 1; 
         let linesClearedTotal = 0; 
+        let paywallShown = false; // '기깔나는' 페이월 '기깔나게' 한 번만!
 
+        // '기깔나는' 몬스터 '가즈아!'
         const SHAPES = [
             [[1, 1, 1, 1]], 
             [[1, 1], [1, 1]], 
@@ -173,17 +222,7 @@
             [[1, 1, 0], [0, 1, 1]], 
             [[0, 1, 1], [1, 1, 0]]  
         ];
-
-        const EMOJIS = [
-            null, 
-            '🐺', 
-            '🎃', 
-            '💀', 
-            '🧜', 
-            '🧛', 
-            '🧟', 
-            '👻'  
-        ];
+        const EMOJIS = ['null', '🐺', '🎃', '💀', '🧜', '🧛', '🧟', '👻'];
         
         let currentPiece;
 
@@ -304,23 +343,25 @@
                 if (newLevel > level) {
                     level = newLevel;
 
-                    // ★★★ '기깔나는' 30단계 최종 승리! '가즈아!' ★★★
+                    // ★★★ NEW: '기깔나는' 30단계 '지옥 난이도' '가즈아!' ★★★
                     if (level > 30) { 
-                        triggerGameWin(); 
+                        triggerGameWin(); // '기깔나는' 최고 레벨 '기깔나게' 도달! '기깔나는' 승리!
                         return;
                     }
-
-                    // ★★★ '기깔나는' 1,000원 '양심 페이월' '가즈아!' (Level 10) ★★★
+                    
+                    // ★★★ NEW: '기깔나는' 1,000원 '페이팔' '양심 페이월' '가즈아!' ★★★
                     if (level === 10 && !paywallShown) {
-                        showPaywallModal(); // '기깔나는' 1,000원 팝업!
-                    } 
-                    // ★★★ '기깔나는' 일반 레벨업! ★★★
-                    else {
-                        showLevelUpModal(level); // '기깔나는' "Are You Ready?"
+                        paywallShown = true;
+                        showPaywall();
+                        return; // '기깔나는' 페이월 '기깔나게' 띄우고 '기깔나게' 멈춤!
                     }
+                    // --- END NEW ---
 
                     levelEl.innerText = level;
+                    // '기깔나는' 지옥의 '기깔나는' 공식!
                     dropInterval = Math.max(100, 700 - (level - 1) * 50); 
+                    
+                    showLevelUpModal(level); 
                 }
             }
         }
@@ -352,10 +393,28 @@
         function triggerGameWin() {
             gameOver = true; 
             gameWinEl.classList.remove('hidden');
-            winScoreEl.innerText = score; 
-            winLevelEl.innerText = level; 
+            winScoreEl.innerText = score; // '기깔나는' 승리 점수 '기깔나게' 팍!
+            winLevelEl.innerText = level; // '기깔나는' 승리 레벨 '기깔나게' 팍!
             bgMusic.pause(); 
         }
+
+        // ★★★ NEW: '기깔나는' 1,000원 '페이팔' '양심 페이월' '가즈아!' ★★★
+        function showPaywall() {
+            gamePaused = true;
+            paywallEl.classList.remove('hidden');
+        }
+
+        continueButton.addEventListener('click', (e) => {
+            e.stopPropagation(); // '기깔나는' 이벤트 '기깔나게' 싹! '기깔나게' 막기
+            paywallEl.classList.add('hidden');
+            gamePaused = false;
+            // '기깔나는' 10레벨 '기깔나는' 속도 '기깔나게' 적용!
+            levelEl.innerText = level;
+            dropInterval = Math.max(100, 700 - (level - 1) * 50); 
+            showLevelUpModal(level); // '기깔나는' 'Are You Ready?' '기깔나게' 띄우기
+        });
+        // --- END NEW ---
+
 
         function showLevelUpModal(nextLevel) {
             gamePaused = true; 
@@ -368,22 +427,6 @@
                 requestAnimationFrame(gameLoop); 
             }, 2000); 
         }
-
-        // ★★★ NEW: '기깔나는' 1,000원 페이월 팝업 '가즈아!' ★★★
-        function showPaywallModal() {
-            gamePaused = true; // '기깔나는' 게임 멈춤!
-            paywallShown = true; // '기깔나는' 팝업 한 번만!
-            paywallModal.classList.remove('hidden');
-        }
-
-        // ★★★ NEW: '기깔나는' 그냥 계속하기 버튼 '가즈아!' ★★★
-        continueButton.addEventListener('click', (e) => {
-            e.stopPropagation(); // '기깔나는' 버블링 방지!
-            paywallModal.classList.add('hidden');
-            gamePaused = false;
-            requestAnimationFrame(gameLoop); // '기깔나는' 게임 재개!
-        });
-
 
         let lastTime = 0;
         let dropCounter = 0;
@@ -407,6 +450,7 @@
             requestAnimationFrame(gameLoop);
         }
 
+        // '기깔나는' 키보드 '기깔나는' 조작
         document.addEventListener('keydown', (e) => {
             if (gameOver || gamePaused) return; 
             
@@ -422,25 +466,24 @@
             }
         });
         
-        // ★★★ '기깔나는' 모바일 터치 '가즈아!' ★★★
+        // '기깔나는' 모바일 '기깔나는' 스와이프 '기깔나는' 조작
         let touchStartX = 0;
         let touchStartY = 0;
 
         document.body.addEventListener('touchstart', (e) => {
-            // '기깔나는' 버튼/링크는 '기깔나게' 터치 조작 '기깔나게' 무시!
             if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A') {
                 touchStartX = 0; 
                 return;
             }
-            e.preventDefault(); // '기깔나는' 화면 스크롤 '기깔나게' 팍! 방지!
+            e.preventDefault(); 
             touchStartX = e.touches[0].clientX;
             touchStartY = e.touches[0].clientY;
-        }, { passive: false }); // '기깔나는' preventDefault를 '기깔나게' 쓰려면 '기깔나게' false!
+        }, { passive: false }); 
 
         document.body.addEventListener('touchend', (e) => {
             if (gameOver || gamePaused || touchStartX === 0) {
-                touchStartX = 0; // '기깔나는' 초기화!
-                return; // '기깔나는' 게임 멈췄거나 '기깔나는' 버튼 눌렀으면 '기깔나게' 무시!
+                touchStartX = 0; 
+                return; 
             }
 
             const touchEndX = e.changedTouches[0].clientX;
@@ -449,58 +492,53 @@
             const deltaX = touchEndX - touchStartX;
             const deltaY = touchEndY - touchStartY;
             
-            const swipeThreshold = 50; // '기깔나는' 50px 이상 '기깔나게' 휙!
-            const tapThreshold = 20;   // '기깔나는' 20px 미만 '기깔나게' 톡!
+            const swipeThreshold = 50; 
+            const tapThreshold = 20;   
 
-            // '기깔나는' 좌/우 스와이프 '가즈아!'
             if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > swipeThreshold) {
                 if (deltaX > 0) {
-                    currentPiece.move(1, 0); // '기깔나는' 오른쪽!
+                    currentPiece.move(1, 0); 
                 } else {
-                    currentPiece.move(-1, 0); // '기깔나는' 왼쪽!
+                    currentPiece.move(-1, 0); 
                 }
             } 
-            // '기깔나는' 아래 스와이프 '가즈아!'
             else if (Math.abs(deltaY) > Math.abs(deltaX) && deltaY > swipeThreshold) {
-                currentPiece.move(0, 1); // '기깔나는' 아래로!
-                dropCounter = 0; // '기깔나는' 타이머 리셋!
+                currentPiece.move(0, 1); 
+                dropCounter = 0; 
             } 
-            // '기깔나는' 탭(Tap) '가즈아!' (회전!)
             else if (Math.abs(deltaX) < tapThreshold && Math.abs(deltaY) < tapThreshold) {
-                currentPiece.rotate(); // '기깔나는' 회전!
+                currentPiece.rotate(); 
             }
 
-            touchStartX = 0; // '기깔나는' 초기화!
+            touchStartX = 0; 
         });
 
-        // ★★★ '기깔나는' 4곡 믹스테잎 '가즈아!' ★★★
+        // '기깔나는' 4곡 믹스테잎 '기깔나는' 재생 '가즈아!'
         function playSong(index) {
-            currentTrackIndex = index % playlist.length; // '기깔나는' 0, 1, 2, 3, 0, 1...
+            currentTrackIndex = index % playlist.length; 
             bgMusic.src = playlist[currentTrackIndex];
             bgMusic.currentTime = 0;
             if (!isMuted) {
-                // '기깔나는' 노래 재생! (실패하면 '기깔나는' 콘솔에 '기깔나게' 팍!)
                 bgMusic.play().catch(e => console.error(`'${playlist[currentTrackIndex]}' 재생 실패:`, e));
             }
         }
 
-        // '기깔나는' 다음 곡 '가즈아!'
         function playNextSong() {
-            playSong(currentTrackIndex + 1); // '기깔나는' 다음 트랙!
+            playSong(currentTrackIndex + 1); 
         }
         
-        // '기깔나는' 노래 끝나면 '기깔나는' 다음 곡 '기깔나게' 팍!
-        bgMusic.addEventListener('ended', playNextSong);
+        bgMusic.addEventListener('ended', playNextSong); // '기깔나는' 한 곡 '기깔나게' 끝나면 '기깔나는' 다음 곡!
 
+        // '기깔나는' 음소거 '가즈아!'
         muteButton.addEventListener('click', (e) => {
-            e.stopPropagation(); // '기깔나는' 버블링 방지!
+            e.stopPropagation(); 
             isMuted = !isMuted;
             if (isMuted) {
                 bgMusic.pause();
                 muteButton.innerText = '🔇';
             } else {
                 if (!bgMusic.src) {
-                    playSong(0); // '기깔나는' 첫 재생!
+                    playSong(0);
                 } else {
                     bgMusic.play().catch(e => console.error("음악 재생 실패:", e));
                 }
@@ -508,6 +546,7 @@
             }
         });
 
+        // '기깔나는' 재시작 '가즈아!'
         restartButton.addEventListener('click', () => {
             board = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
             score = 0;
@@ -516,18 +555,19 @@
             dropInterval = 700; 
             level = 1; 
             linesClearedTotal = 0; 
-            paywallShown = false; // ★★★ NEW: '기깔나는' 페이월 리셋! ★★★
+            paywallShown = false; // '기깔나는' 페이월 '기깔나게' 리셋!
             scoreEl.innerText = '0';
             levelEl.innerText = '1'; 
             gameOverEl.classList.add('hidden');
             gameWinEl.classList.add('hidden'); 
             
-            if (!isMuted) playSong(0); // '기깔나는' 1번 트랙부터 '가즈아!'
+            if (!isMuted) playSong(0);
 
             spawnNewPiece();
             gameLoop();
         });
 
+        // '기깔나는' 승리 후 '기깔나는' 재시작 '가즈아!'
         restartButtonWin.addEventListener('click', () => {
             board = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
             score = 0;
@@ -536,36 +576,45 @@
             dropInterval = 700;
             level = 1;
             linesClearedTotal = 0;
-            paywallShown = false; // ★★★ NEW: '기깔나는' 페이월 리셋! ★★★
+            paywallShown = false; // '기깔나는' 페이월 '기깔나게' 리셋!
             scoreEl.innerText = '0';
             levelEl.innerText = '1';
             gameOverEl.classList.add('hidden');
             gameWinEl.classList.add('hidden');
 
-            if (!isMuted) playSong(0); // '기깔나는' 1번 트랙부터 '가즈아!'
+            if (!isMuted) playSong(0);
 
             spawnNewPiece();
             gameLoop();
         });
 
+        // '기깔나는' 게임 '기깔나게' 시작 '가즈아!'
         spawnNewPiece();
         gameLoop();
 
-        // ★★★ '기깔나는' 첫 클릭/터치 시 '기깔나는' 음악 자동재생 '가즈아!' (핵심!) ★★★
-        function playMusicOnFirstInteraction(e) {
-            // '기깔나는' 버튼/링크는 '기깔나게' 무시!
-            if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A') return;
-
+        // '기깔나는' 첫 '기깔나는' 클릭 '기깔나는' 음악 '기깔나게' 재생 '가즈아!'
+        function playMusicOnFirstInteraction() {
             if (!isMuted && bgMusic.paused && !gameOver) {
-                playSong(0); // '기깔나는' 1번 트랙 '가즈아!'
+                playSong(0); 
             }
-            // '기깔나는' 이벤트 리스너 '기깔나게' 싹! 제거! (한 번만!)
             document.body.removeEventListener('click', playMusicOnFirstInteraction);
             document.body.removeEventListener('touchstart', playMusicOnFirstInteraction);
         }
         
         document.body.addEventListener('click', playMusicOnFirstInteraction);
         document.body.addEventListener('touchstart', playMusicOnFirstInteraction);
+
+        // ★★★ NEW: '기깔나는' '가짜' 라이브 통계 '기깔나게' 1초마다 '기깔나게' 싹! '기깔나게' '업데이트' '가즈아!' ★★★
+        setInterval(() => {
+            if (!gamePaused && !gameOver) {
+                fakeParticipants += Math.floor(Math.random() * 3) + 1; // '기깔나게' 1~3명 '기깔나게' 싹! '기깔나게' 증가
+                fakeAvgScore += Math.floor(Math.random() * 10); // '기깔나는' 점수도 '기깔나게' 싹! '기깔나게' 증가
+                
+                participantsEl.innerText = fakeParticipants.toLocaleString(); // '기깔나는' 콤마 '기깔나게' 팍!
+                avgScoreEl.innerText = fakeAvgScore.toLocaleString(); // '기깔나는' 콤마 '기깔나게' 팍!
+            }
+        }, 1500); // '기깔나게' 1.5초마다 '기깔나게' 싹!
+        // --- END NEW ---
     </script>
 </body>
 </html>
