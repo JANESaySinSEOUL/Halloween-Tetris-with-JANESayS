@@ -19,6 +19,7 @@
             display: block;
             border: 4px dashed #ff6600; /* 할로윈 주황색 점선 */
             box-shadow: 0 0 25px #ff6600, inset 0 0 10px #000;
+            margin: 0 auto; /* ★★★ NEW: '기깔나는' 중앙 정렬 '가즈아!' ★★★ */
         }
         .hidden { display: none; }
         /* 일반 텍스트용 폰트 (가독성) */
@@ -28,6 +29,9 @@
     </style>
 </head>
 <body class="text-white min-h-screen flex flex-col items-center justify-center p-4">
+
+    <!-- ★★★ NEW: '기깔나는' 음소거 버튼! (위치 변경!) ★★★ -->
+    <button id="muteButton" class="absolute top-4 right-4 text-3xl opacity-80 hover:opacity-100 z-10">🔊</button>
 
     <div class="w-full max-w-sm text-center">
         <h1 class="text-5xl font-bold text-orange-500 mb-2">Halloween Specters</h1>
@@ -40,7 +44,7 @@
             <span>Level: <span id="level">1</span></span>
         </div>
 
-        <!-- 게임 캔버스 -->
+        <!-- 게임 캔버스 (이제 '기깔나게' 중앙 정렬!) -->
         <canvas id="gameCanvas" width="300" height="600" class="rounded-lg"></canvas>
 
         <!-- NEW: 부제 위치 이동! (캔버스 바로 아래) -->
@@ -79,11 +83,14 @@
         </div>
     </div>
     
-    <!-- NEW: '기깔나는' 음소거 버튼! -->
-    <button id="muteButton" class="absolute top-4 right-4 text-3xl opacity-80 hover:opacity-100">🔊</button>
-
-    <!-- NEW: '기깔나는' 배경음악! (song.mp3로 이름 변경!) -->
-    <audio id="bgMusic" src="song.mp3" loop></audio>
+    <!-- ★★★ NEW: '기깔나는' 배경음악! ('기깔나는' 3가지 포맷 지원 '가즈아!') ★★★ -->
+    <audio id="bgMusic" loop>
+        <!-- '기깔나는' 깃허브(GitHub)에 'song.mp3' 또는 'song.ogg' 또는 'song.wav' (싹 다 소문자!)를 '기깔나게' 업로드해주세요! -->
+        <source src="song.mp3" type="audio/mpeg">
+        <source src="song.ogg" type="audio/ogg">
+        <source src="song.wav" type="audio/wav">
+        '기깔나는' 세레나데를 '기깔나게' 로드할 수 없습니다! (오디오 태그 미지원)
+    </audio>
 
     <script>
         const canvas = document.getElementById('gameCanvas');
@@ -102,7 +109,7 @@
         const restartButtonWin = document.getElementById('restartButtonWin');
         // --- END NEW ---
 
-        // --- NEW: '기깔나는' 음악 제어 ---
+        // ★★★ NEW: '기깔나는' 음악 제어 '가즈아!' ★★★
         const muteButton = document.getElementById('muteButton');
         const bgMusic = document.getElementById('bgMusic');
         let isMuted = false;
@@ -321,14 +328,14 @@
             gameOver = true;
             gameOverEl.classList.remove('hidden');
             finalScoreEl.innerText = score;
-            bgMusic.pause(); // NEW: 게임 오버 시 음악 정지
+            bgMusic.pause(); // ★★★ NEW: '기깔나는' 게임 오버 시 음악 정지 ★★★
         }
 
         // --- NEW: 레벨 20 격파! ---
         function triggerGameWin() {
             gameOver = true; // 게임 루프를 멈추기 위해
             gameWinEl.classList.remove('hidden');
-            bgMusic.pause(); // NEW: 승리 시 음악 정지 (다른 곡 재생 가능)
+            bgMusic.pause(); // ★★★ NEW: '기깔나는' 승리 시 음악 정지 ★★★
             // TODO: 여기에 '스켈레탈의 세레나데' (다른 버전?) 재생 코드!
         }
 
@@ -388,8 +395,9 @@
         
         // TODO: 모바일 터치 조작 (스와이프, 탭) 추가
 
-        // --- NEW: '기깔나는' 음소거 버튼 로직 ---
-        muteButton.addEventListener('click', () => {
+        // ★★★ NEW: '기깔나는' 음소거 버튼 로직 '가즈아!' ★★★
+        muteButton.addEventListener('click', (e) => {
+            e.stopPropagation(); // ★★★ NEW: '기깔나는' 바디 클릭 이벤트와 '기깔나는' 중복 방지! ★★★
             isMuted = !isMuted;
             if (isMuted) {
                 bgMusic.pause();
@@ -414,9 +422,9 @@
             gameOverEl.classList.add('hidden');
             gameWinEl.classList.add('hidden'); // --- NEW: 승리 화면 숨기기 ---
             
-            // NEW: 음악 재시작
+            // ★★★ NEW: '기깔나는' 음악 재시작 ★★★
             bgMusic.currentTime = 0;
-            if (!isMuted) bgMusic.play();
+            if (!isMuted) bgMusic.play().catch(e => console.error("음악 재생 실패:", e));
 
             spawnNewPiece();
             gameLoop();
@@ -436,9 +444,9 @@
             gameOverEl.classList.add('hidden');
             gameWinEl.classList.add('hidden');
 
-            // NEW: 음악 재시작
+            // ★★★ NEW: '기깔나는' 음악 재시작 ★★★
             bgMusic.currentTime = 0;
-            if (!isMuted) bgMusic.play();
+            if (!isMuted) bgMusic.play().catch(e => console.error("음악 재생 실패:", e));
 
             spawnNewPiece();
             gameLoop();
@@ -448,12 +456,13 @@
         spawnNewPiece();
         gameLoop();
 
-        // NEW: '기깔나는' 첫 클릭 시 음악 자동재생 (브라우저 정책 대응)
+        // ★★★ NEW: '기깔나는' 첫 클릭 시 음악 자동재생 '가즈아!' ★★★
         document.body.addEventListener('click', () => {
-            if (!isMuted && bgMusic.paused) {
+            if (!isMuted && bgMusic.paused && !gameOver) {
                 bgMusic.play().catch(e => console.error("음악 재생 실패:", e));
             }
         }, { once: true }); // '기깔나게' 한 번만 실행
     </script>
 </body>
 </html>
+
