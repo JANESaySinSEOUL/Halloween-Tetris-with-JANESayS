@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"> <!-- '기깔나는' 모바일 확대 방지! -->
     <title>Halloween Specter Tetris</title>
     <!-- Tailwind CSS 로드 -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -13,6 +13,8 @@
             font-family: 'Griffy', cursive; /* 폰트 변경! */
             overflow: hidden; /* 스크롤 방지 */
             background: linear-gradient(180deg, #0d0a1a 0%, #310b4a 100%); /* 어둡고 보라색인 배경 */
+            /* ★★★ NEW: '기깔나는' 모바일 터치 스크롤 '기깔나게' 싹! 방지 ★★★ */
+            touch-action: none;
         }
         canvas {
             background-color: #1a1a1a;
@@ -83,14 +85,9 @@
         </div>
     </div>
     
-    <!-- ★★★ NEW: '기깔나는' 배경음악! ('기깔나는' 3가지 포맷 지원 '가즈아!') ★★★ -->
-    <audio id="bgMusic" loop>
-        <!-- '기깔나는' 깃허브(GitHub)에 'song.mp3' 또는 'song.ogg' 또는 'song.wav' (싹 다 소문자!)를 '기깔나게' 업로드해주세요! -->
-        <source src="song.mp3" type="audio/mpeg">
-        <source src="song.ogg" type="audio/ogg">
-        <source src="song.wav" type="audio/wav">
-        '기깔나는' 세레나데를 '기깔나게' 로드할 수 없습니다! (오디오 태그 미지원)
-    </audio>
+    <!-- ★★★ NEW: '기깔나는' 배경음악! ('기깔나는' 4곡 '기깔나는' 믹스테잎 '가즈아!') ★★★ -->
+    <!-- '기깔나는' <source> 태그 '기깔나게' 싹! 제거! '기깔나는' 스크립트가 '기깔나게' 싹! 다! 할 거예요! -->
+    <audio id="bgMusic" preload="auto"></audio>
 
     <script>
         const canvas = document.getElementById('gameCanvas');
@@ -109,10 +106,18 @@
         const restartButtonWin = document.getElementById('restartButtonWin');
         // --- END NEW ---
 
-        // ★★★ NEW: '기깔나는' 음악 제어 '가즈아!' ★★★
+        // ★★★ NEW: '기깔나는' 4곡 믹스테잎 '가즈아!' ★★★
         const muteButton = document.getElementById('muteButton');
         const bgMusic = document.getElementById('bgMusic');
         let isMuted = false;
+
+        const playlist = [
+            'song.mp3',  // '기깔나는' 1번 곡! (싹 다 소문자!)
+            'song1.mp3', // '기깔나는' 2번 곡! (싹 다 소문자!)
+            'song2.mp3', // '기깔나는' 3번 곡! (싹 다 소문자!)
+            'song3.mp3'  // ★★★ NEW: '기깔나는' 4번 곡! (싹 다 소문자!) ★★★
+        ];
+        let currentTrackIndex = 0;
         // --- END NEW ---
 
         // 게임 보드 설정
@@ -328,14 +333,14 @@
             gameOver = true;
             gameOverEl.classList.remove('hidden');
             finalScoreEl.innerText = score;
-            bgMusic.pause(); // ★★★ NEW: '기깔나는' 게임 오버 시 음악 정지 ★★★
+            bgMusic.pause(); // '기깔나는' 게임 오버 시 음악 정지
         }
 
         // --- NEW: 레벨 20 격파! ---
         function triggerGameWin() {
             gameOver = true; // 게임 루프를 멈추기 위해
             gameWinEl.classList.remove('hidden');
-            bgMusic.pause(); // ★★★ NEW: '기깔나는' 승리 시 음악 정지 ★★★
+            bgMusic.pause(); // '기깔나는' 승리 시 음악 정지
             // TODO: 여기에 '스켈레탈의 세레나데' (다른 버전?) 재생 코드!
         }
 
@@ -393,17 +398,95 @@
             }
         });
         
-        // TODO: 모바일 터치 조작 (스와이프, 탭) 추가
+        // ★★★ NEW: '기깔나는' 모바일 터치 조작 '가즈아!' ★★★
+        let touchStartX = 0;
+        let touchStartY = 0;
 
-        // ★★★ NEW: '기깔나는' 음소거 버튼 로직 '가즈아!' ★★★
+        // '기깔나는' 스크롤 방지 및 시작점 '기깔나게' 기록
+        document.body.addEventListener('touchstart', (e) => {
+            // '기깔나는' 버튼/링크 클릭은 '기깔나게' 무시 (스크롤 방지 X)
+            if (e.target.tagName === 'BUTTON' || e.target.tagName === 'A') {
+                touchStartX = 0; // '기깔나는' 스와이프 방지
+                return;
+            }
+            e.preventDefault(); // '기깔나는' 게임 영역 스크롤 '기깔나게' 싹! 방지
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        }, { passive: false }); // e.preventDefault()를 위해 '기깔나게' passive: false
+
+        // '기깔나는' 스와이프/탭 '기깔나게' 감지
+        document.body.addEventListener('touchend', (e) => {
+            if (gameOver || gamePaused || touchStartX === 0) {
+                touchStartX = 0; // '기깔나는' 리셋
+                return; // '기깔나는' 게임오버/일시정지/시작점 없으면 '기깔나게' 무시
+            }
+
+            const touchEndX = e.changedTouches[0].clientX;
+            const touchEndY = e.changedTouches[0].clientY;
+
+            const deltaX = touchEndX - touchStartX;
+            const deltaY = touchEndY - touchStartY;
+            
+            const swipeThreshold = 50; // '기깔나는' 스와이프 민감도
+            const tapThreshold = 20;   // '기깔나는' 탭 민감도 (살짝 여유롭게)
+
+            // '기깔나는' 가로 스와이프 (좌/우)
+            if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > swipeThreshold) {
+                if (deltaX > 0) {
+                    currentPiece.move(1, 0); // '기깔나는' 우측 스와이프
+                } else {
+                    currentPiece.move(-1, 0); // '기깔나는' 좌측 스와이프
+                }
+            } 
+            // '기깔나는' 세로 스와이프 (아래)
+            else if (Math.abs(deltaY) > Math.abs(deltaX) && deltaY > swipeThreshold) {
+                currentPiece.move(0, 1); // '기깔나는' 아래 스와이프
+                dropCounter = 0; // '기깔나는' 타이머 리셋
+            } 
+            // '기깔나는' 탭 (회전)
+            else if (Math.abs(deltaX) < tapThreshold && Math.abs(deltaY) < tapThreshold) {
+                currentPiece.rotate(); // '기깔나는' 탭
+            }
+
+            touchStartX = 0; // '기깔나는' 터치 좌표 리셋
+        });
+        // ★★★ END NEW ★★★
+
+
+        // ★★★ NEW: '기깔나는' 4곡 믹스테잎 '기깔나는' 함수 '가즈아!' ★★★
+        function playSong(index) {
+            currentTrackIndex = index % playlist.length; // '기깔나는' 무한 루프
+            bgMusic.src = playlist[currentTrackIndex];
+            bgMusic.currentTime = 0;
+            if (!isMuted) {
+                // '기깔나는' play()는 '기깔나는' Promise를 반환, '기깔나게' catch!
+                bgMusic.play().catch(e => console.error(`'${playlist[currentTrackIndex]}' 재생 실패:`, e));
+            }
+        }
+
+        function playNextSong() {
+            playSong(currentTrackIndex + 1); // '기깔나는' 다음 곡!
+        }
+        
+        // '기깔나는' 노래 끝나면 '기깔나는' 다음 곡 '기깔나게' 자동 재생
+        bgMusic.addEventListener('ended', playNextSong);
+        // ★★★ END NEW ★★★
+
+
+        // ★★★ NEW: '기깔나는' 음소거 버튼 로직 ('기깔나는' 믹스테잎 버전) ★★★
         muteButton.addEventListener('click', (e) => {
-            e.stopPropagation(); // ★★★ NEW: '기깔나는' 바디 클릭 이벤트와 '기깔나는' 중복 방지! ★★★
+            e.stopPropagation(); // '기깔나는' 바디 클릭/터치 이벤트와 '기깔나는' 중복 방지!
             isMuted = !isMuted;
             if (isMuted) {
                 bgMusic.pause();
                 muteButton.innerText = '🔇';
             } else {
-                bgMusic.play().catch(e => console.error("음악 재생 실패:", e));
+                // '기깔나는' 노래가 '기깔나게' 로드된 적 없으면 '기깔나는' 0번 곡 '기깔나게' 시작!
+                if (!bgMusic.src) {
+                    playSong(0);
+                } else {
+                    bgMusic.play().catch(e => console.error("음악 재생 실패:", e));
+                }
                 muteButton.innerText = '🔊';
             }
         });
@@ -422,9 +505,8 @@
             gameOverEl.classList.add('hidden');
             gameWinEl.classList.add('hidden'); // --- NEW: 승리 화면 숨기기 ---
             
-            // ★★★ NEW: '기깔나는' 음악 재시작 ★★★
-            bgMusic.currentTime = 0;
-            if (!isMuted) bgMusic.play().catch(e => console.error("음악 재생 실패:", e));
+            // ★★★ NEW: '기깔나는' 0번 곡부터 '기깔나게' 재시작! ★★★
+            if (!isMuted) playSong(0);
 
             spawnNewPiece();
             gameLoop();
@@ -444,9 +526,8 @@
             gameOverEl.classList.add('hidden');
             gameWinEl.classList.add('hidden');
 
-            // ★★★ NEW: '기깔나는' 음악 재시작 ★★★
-            bgMusic.currentTime = 0;
-            if (!isMuted) bgMusic.play().catch(e => console.error("음악 재생 실패:", e));
+            // ★★★ NEW: '기깔나는' 0번 곡부터 '기깔나게' 재시작! ★★★
+            if (!isMuted) playSong(0);
 
             spawnNewPiece();
             gameLoop();
@@ -456,12 +537,18 @@
         spawnNewPiece();
         gameLoop();
 
-        // ★★★ NEW: '기깔나는' 첫 클릭 시 음악 자동재생 '가즈아!' ★★★
-        document.body.addEventListener('click', () => {
+        // ★★★ NEW: '기깔나는' 첫 클릭/터치 시 '기깔나는' 0번 곡 '기깔나게' 시작! ★★★
+        function playMusicOnFirstInteraction() {
             if (!isMuted && bgMusic.paused && !gameOver) {
-                bgMusic.play().catch(e => console.error("음악 재생 실패:", e));
+                playSong(0); // '기깔나는' 0번 곡부터 '기깔나게' 시작!
             }
-        }, { once: true }); // '기깔나게' 한 번만 실행
+            // '기깔나게' 이벤트 리스너 '기깔나게' 싹! 제거
+            document.body.removeEventListener('click', playMusicOnFirstInteraction);
+            document.body.removeEventListener('touchstart', playMusicOnFirstInteraction);
+        }
+        
+        document.body.addEventListener('click', playMusicOnFirstInteraction);
+        document.body.addEventListener('touchstart', playMusicOnFirstInteraction);
     </script>
 </body>
 </html>
