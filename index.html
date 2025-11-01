@@ -16,6 +16,12 @@
             overflow: hidden; /* 스크롤 방지 */
             background: linear-gradient(180deg, #0d0a1a 0%, #310b4a 100%); /* 어둡고 보라색인 배경 */
             touch-action: none; /* '기깔나는' 모바일 터치 스크롤 '기깔나게' 싹! 방지 */
+            /* ★★★ NEW: '기깔나는' '핸드폰' '기깔나는' '화면' '기깔나게' 100% '기깔나게' '기깔나게' '채우기' '가즈아!' ★★★ */
+            height: 100vh; /* 'min-h-screen' 대신 '기깔나게' 100% '기깔나게' '기깔나게' '고정' */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
         /* '기깔나는' 영어 제목 폰트 (Griffy) */
         .title-font {
@@ -31,37 +37,37 @@
         .hidden { display: none; }
     </style>
 </head>
-<body class="text-white min-h-screen flex flex-col items-center justify-center p-4">
+<body class="text-white p-2"> <!-- '기깔나는' '패딩' '기깔나게' 100% '기깔나게' '기깔나게' '조금' '기깔나게' 100% '기깔나게' '기깔나게' '줄임' -->
 
     <!-- '기깔나는' 음소거 버튼! -->
-    <button id="muteButton" class="absolute top-4 right-4 text-3xl opacity-80 hover:opacity-100 z-10">🔊</button>
+    <button id="muteButton" class="absolute top-2 right-2 text-3xl opacity-80 hover:opacity-100 z-10">🔊</button>
 
     <!-- ★★★ NEW: '기깔나는' 'HOW TO PLAY (설명서)' '기깔나는' '수익화' '기깔나는' '필수' '가즈아!' ★★★ -->
-    <!-- ★★★ FIX: '기깔나는' 'GenZ' '기깔나는' '멘트'로 '기깔나게' 100% '기깔나게' '기깔나게' '싹!' '기깔나게' 100% '기깔나게' '기깔나게' '수정' '가즈아!' ★★★ -->
     <div id="how-to-play" class="absolute inset-0 bg-black bg-opacity-90 flex flex-col justify-center items-center text-center p-4 z-50">
-        <h2 class="text-6xl font-bold text-orange-500 mb-4 title-font">HOW TO PLAY</h2>
+        <!-- ★★★ FIX: '기깔나는' '글씨' '기깔나게' 100% '기깔나게' '기깔나게' '축소' ★★★ -->
+        <h2 class="text-5xl font-bold text-orange-500 mb-4 title-font">HOW TO PLAY</h2>
         
         <!-- '기깔나는' PC '기깔나는' 설명서 (기본 '기깔나게' 100% '기깔나게' '기깔나게' '숨김') -->
-        <div id="pc-instructions" class="hidden text-2xl text-white space-y-3 px-2">
+        <div id="pc-instructions" class="hidden text-xl text-white space-y-2 px-2">
             <p class="mb-3">'JANESAYS가 만든 Halloween Tetris예요.<br>사용법은 이미 잘아시겠지만, 한번더;)' ⌨️</p>
             <p><span class="text-lime-400">← / →</span> : 좌/우 이동</p>
             <p><span class="text-lime-400">↓</span> : 소프트 드롭 (1칸)</p>
             <p><span class="text-lime-400">↑ / W / X</span> : 회전 (변형!)</p>
             <p><span class="text-lime-400">SPACE BAR</span> : 하드 드롭 (광속!) 💥</p>
-            <p class="pt-3">Ready?!</p>
+            <p class="pt-2">Ready?!</p>
         </div>
 
         <!-- '기깔나는' 모바일 '기깔나는' 설명서 (기본 '기깔나게' 100% '기깔나게' '기깔나게' '숨김') -->
-        <div id="mobile-instructions" class="hidden text-2xl text-white space-y-3 px-2">
+        <div id="mobile-instructions" class="hidden text-xl text-white space-y-2 px-2">
             <p class="mb-3">'JANESAYS가 만든 Halloween Tetris!<br>폰으로는... 요렇게! ;)' 📱</p>
             <p><span class="text-lime-400">스와이프 ← / →</span> : 좌/우 이동</p>
             <p><span class="text-lime-400">스와이프 ↓</span> : 소프트 드롭 (1칸)</p>
             <p><span class="text-lime-400">톡! 탭</span> : 회전 (변형!)</p>
             <p><span class="text-lime-400">스와이프 ↑</span> : 하드 드롭 (광속!) 💥</p>
-            <p class="pt-3">Ready?!</p>
+            <p class="pt-2">Ready?!</p>
         </div>
 
-        <button id="startButton" class="mt-10 px-10 py-4 bg-orange-500 text-gray-900 font-bold rounded-lg shadow-lg hover:bg-orange-400 transition-all text-5xl title-font">
+        <button id="startButton" class="mt-8 px-8 py-3 bg-orange-500 text-gray-900 font-bold rounded-lg shadow-lg hover:bg-orange-400 transition-all text-4xl title-font">
             READY! (가즈아!)
         </button>
     </div>
@@ -69,66 +75,60 @@
 
 
     <div class="w-full max-w-sm text-center">
-        <h1 class="text-5xl font-bold text-orange-500 mb-2 title-font">Halloween Specters</h1>
+        <!-- ★★★ FIX: '기깔나는' '글씨' '기깔나게' 100% '기깔나게' '기깔나게' '축소' / '기깔나는' '간격' '기깔나게' 100% '기깔나게' '기깔나게' '축소' ★★★ -->
+        <h1 class="text-4xl font-bold text-orange-500 title-font">Halloween Specters</h1>
         
-        <!-- ★★★ NEW: '기깔나는' '가짜' 라이브 통계 '가즈아!' ★★★ -->
-        <div class="flex justify-between text-lg mb-2 text-purple-300">
+        <!-- '기깔나는' '가짜' 라이브 통계 '가즈아!' -->
+        <div class="flex justify-between text-base mb-1 text-purple-300">
             <span>참여: <span id="participants">1,337</span>명</span>
             <span>평균 점수: <span id="avgScore">4,500</span>점</span>
         </div>
 
-        <div class="flex justify-between text-3xl mb-2 text-lime-400">
+        <div class="flex justify-between text-2xl mb-1 text-lime-400">
             <span>Score: <span id="score">0</span></span>
             <span>Level: <span id="level">1</span></span>
         </div>
 
-        <!-- 게임 캔버스 (이제 '기깔나게' 중앙 정렬!) -->
-        <canvas id="gameCanvas" width="300" height="600" class="rounded-lg"></canvas>
+        <!-- ★★★ FIX: '기깔나는' '캔버스' '기깔나게' 100% '기깔나게' '기깔나게' '싹!' '기깔나게' 100% '기깔나게' '기깔나게' '축소' '가즈아!' (600 -> 480) ★★★ -->
+        <canvas id="gameCanvas" width="240" height="480" class="rounded-lg"></canvas>
 
         <!-- '기깔나는' 부제 (GenZ 폰트 '기깔나게' 싹! '기깔나게' 적용!) -->
-        <p class="text-2xl text-purple-300 mt-4">Moonlight Specters, 보름달이 뜨면 그들이 온다! 🌕</p>
-        <p class="text-2xl text-purple-300 mt-1">도전해볼래?</p> 
+        <p class="text-lg text-purple-300 mt-2">Moonlight Specters, 보름달이 뜨면 그들이 온다! 🌕</p>
+        <p class="text-lg text-purple-300">도전해볼래?</p> 
 
-        <div class="mt-4 text-lime-400 text-xl">
+        <div class="mt-2 text-lime-400 text-base">
             Created by <a href="https://www.youtube.com/@JanesaysPalalalaRecords" target="_blank" class="hover:text-orange-500 underline title-font">JANESayS</a>
-            <p class="text-sm text-gray-400">(Click to listen to the original soundtrack!)</p>
+            <p class="text-xs text-gray-400">(Click to listen to the original soundtrack!)</p>
         </div>
 
-        <!-- ★★★ NEW: '기깔나는' '멘탈 회복' GameOver '가즈아!' ★★★ -->
+        <!-- '기깔나는' '멘탈 회복' GameOver '가즈아!' -->
         <div id="game-over" class="hidden absolute inset-0 bg-black bg-opacity-80 flex flex-col justify-center items-center text-center p-4 z-20">
-            <h2 class="text-7xl font-bold text-red-600">다시 도전! 🔥</h2>
-            <p class="text-5xl text-white mt-2">할 수 있어요!</p>
-            
-            <p class="text-4xl mt-4 text-lime-400">Score: <span id="finalScore">0</span></p>
-    
-            <div class="mt-6 text-3xl text-white px-4">
+            <h2 class="text-5xl font-bold text-red-600">다시 도전! 🔥</h2>
+            <p class="text-4xl text-white mt-2">할 수 있어요!</p>
+            <p class="text-3xl mt-4 text-lime-400">Score: <span id="finalScore">0</span></p>
+            <div class="mt-4 text-2xl text-white px-4">
                 <p>"Moonlight Specters는 총 30 Level까지!"</p>
-                <p class="text-2xl text-gray-300 mt-2">"'스켈레탈 세레나데' 들으면서<br>멘탈회복하고 다시?!"</p>
+                <p class="text-xl text-gray-300 mt-2">"'스켈레탈 세레나데' 들으면서<br>멘탈회복하고 다시?!"</p>
             </div>
-            
-            <button id="restartButton" class="mt-8 px-10 py-4 bg-orange-500 text-gray-900 font-bold rounded-lg shadow-lg hover:bg-orange-400 transition-all text-5xl title-font">
+            <button id="restartButton" class="mt-6 px-8 py-3 bg-orange-500 text-gray-900 font-bold rounded-lg shadow-lg hover:bg-orange-400 transition-all text-4xl title-font">
                 RESTART!
             </button>
         </div>
 
-        <!-- ★★★ NEW: '기깔나는' 1,000원 '페이팔' '양심 페이월' '가즈아!' ★★★ -->
+        <!-- '기깔나는' 1,000원 '페이팔' '양심 페이월' '가즈아!' -->
         <div id="level-10-paywall" class="hidden absolute inset-0 bg-black bg-opacity-80 flex flex-col justify-center items-center text-center p-4 z-20">
-            <div class="text-8xl mb-4">🚀</div>
-            <h2 class="text-4xl font-bold text-lime-400">"테트리스 꺠부시기?"</h2>
-            <p class="text-3xl mt-2 text-white">"국민고수 다 놔와서 실력을 보여주세요!"</p>
-            
-            <p class="text-2xl mt-6 text-purple-300 px-4">Level 10은 '기깔나는' 지옥의 시작...<br>Level 30까지 '가즈아!'</p>
-            <p class="text-xl mt-4 text-white px-2">"현재 당신의 Score/Ranking을 살펴보세요! 😉"</p>
-
-            <div class="mt-8">
-                <!-- ★★★ '기깔나는' 1,000원 '기깔나는' 페이팔 '기깔나는' 링크! ★★★ -->
-                <a href="https://paypal.me/palalalarecordsJANE" target="_blank" class="px-6 py-4 bg-blue-500 text-white font-bold rounded-lg shadow-lg hover:bg-blue-400 transition-all text-3xl">
+            <div class="text-6xl mb-2">🚀</div>
+            <h2 class="text-3xl font-bold text-lime-400">"테트리스 꺠부시기?"</h2>
+            <p class="text-2xl mt-2 text-white">"국민고수 다 놔와서 실력을 보여주세요!"</p>
+            <p class="text-xl mt-4 text-purple-300 px-4">Level 10은 '기깔나는' 지옥의 시작...<br>Level 30까지 '가즈아!'</p>
+            <p class="text-base mt-2 text-white px-2">"현재 당신의 Score/Ranking을 살펴보세요! 😉"</p>
+            <div class="mt-6">
+                <a href="https://paypal.me/palalalarecordsJANE" target="_blank" class="px-4 py-3 bg-blue-500 text-white font-bold rounded-lg shadow-lg hover:bg-blue-400 transition-all text-2xl">
                     Would You Buy Me a Coffee? ☕<br>
-                    <span class="text-2xl">(JANESAYS 1,000원 'Paypal' 후원 '가즈아!')</span>
+                    <span class="text-xl">(JANESAYS 1,000원 'Paypal' 후원 '가즈아!')</span>
                 </a>
             </div>
-            
-            <button id="continueButton" class="mt-6 px-8 py-3 bg-gray-600 text-white font-bold rounded-lg hover:bg-gray-500 transition-all text-2xl">
+            <button id="continueButton" class="mt-4 px-6 py-2 bg-gray-600 text-white font-bold rounded-lg hover:bg-gray-500 transition-all text-xl">
                 ...다음에 (그냥 계속하기)
             </button>
         </div>
@@ -136,50 +136,37 @@
 
         <!-- '기깔나는' 레벨 업 (Are You Ready?) -->
         <div id="level-up" class="hidden absolute inset-0 bg-black bg-opacity-80 flex flex-col justify-center items-center text-center p-4 z-20">
-            <div class="text-8xl mb-4">💀</div> 
-            <h2 class="text-6xl font-bold text-lime-400 title-font">LEVEL <span id="nextLevel">2</span></h2>
-            <p class="text-5xl mt-4 text-white">Are You Ready?</p>
+            <div class="text-6xl mb-2">💀</div> 
+            <h2 class="text-5xl font-bold text-lime-400 title-font">LEVEL <span id="nextLevel">2</span></h2>
+            <p class="text-4xl mt-2 text-white">Are You Ready?</p>
         </div>
 
-        <!-- ★★★ NEW: '기깔나는' Level 30 '승리' 화면 '가즈아!' ★★★ -->
-        <!-- ★★★ FIX: '기깔나는' 배경 '기깔나게' 싹! '기깔나게' 수정! ('win_bg.jpg' '가즈아!') ★★★ -->
+        <!-- '기깔나는' Level 30 '승리' 화면 '가즈아!' -->
         <div id="game-win" class="hidden absolute inset-0 bg-black bg-opacity-70 flex flex-col justify-center items-center text-center p-4 bg-cover bg-center z-20" style="background-image: url('win_bg.jpg');">
-            <!-- '기깔나는' 배경 이미지를 '기깔나게' 덮는 '기깔나는' 반투명 '기깔나는' 오버레이 -->
             <div class="absolute inset-0 bg-black bg-opacity-60 z-0"></div>
-            
-            <!-- '기깔나는' 콘텐츠 (z-10으로 '기깔나게' 위로!) -->
             <div class="relative z-10 w-full">
-                <h1 class="text-5xl font-bold text-orange-500 mb-2 title-font">Moonlight Specters</h1>
-                
-                <!-- ★★★ NEW: '기깔나는' King/Queen '가즈아!' (영어 '가즈아!') ★★★ -->
-                <h2 class="text-4xl font-bold text-purple-300 mt-4 title-font">ARE YOU THE NEXT</h2>
-                <h2 class="text-4xl font-bold text-purple-300 mt-1 title-font">SPECTER KING / QUEEN? 👑</h2>
-                
-                <p class="text-4xl mt-6 text-lime-400">최고 점수: <span id="winScore">0</span></p>
-                <p class="text-4xl mt-2 text-lime-400">Level: <span id="winLevel">30</span></p>
-
-                <!-- '기깔나는' 랭크 (임시 '기깔나는' 이미지!) -->
-                <div class="flex justify-around w-full max-w-xs mt-6">
+                <h1 class="text-4xl font-bold text-orange-500 mb-2 title-font">Moonlight Specters</h1>
+                <h2 class="text-3xl font-bold text-purple-300 mt-2 title-font">ARE YOU THE NEXT</h2>
+                <h2 class="text-3xl font-bold text-purple-300 mt-1 title-font">SPECTER KING / QUEEN? 👑</h2>
+                <p class="text-3xl mt-4 text-lime-400">최고 점수: <span id="winScore">0</span></p>
+                <p class="text-3xl mt-2 text-lime-400">Level: <span id="winLevel">30</span></p>
+                <div class="flex justify-around w-full max-w-xs mt-4">
                     <div class="flex flex-col items-center">
-                        <span class="text-6xl">💀</span>
-                        <span class="text-2xl text-white mt-2">RANK: SKELETON</span>
+                        <span class="text-5xl">💀</span>
+                        <span class="text-xl text-white mt-1">RANK: SKELETON</span>
                     </div>
                     <div class="flex flex-col items-center">
-                        <span class="text-6xl">🐺</span>
-                        <span class="text-2xl text-white mt-2">RANK: WOLFMAN</span>
+                        <span class="text-5xl">🐺</span>
+                        <span class="text-xl text-white mt-1">RANK: WOLFMAN</span>
                     </div>
                 </div>
-
-                <!-- ★★★ NEW: '기깔나는' 굿즈 '가즈아!' ('Gaegu' 폰트!) ★★★ -->
-                <p class="text-xl text-gray-300 mt-6 px-2">
+                <p class="text-base text-gray-300 mt-4 px-2">
                     "KING / QUEEN이 되신 분들은<br>JANESAYS Page에 Rank Page를 포함시켜 축하해드리고,<br>굿즈도 보내드릴 예정입니다!"
                 </p>
-
-                <a href="https://www.youtube.com/@JanesaysPalalalaRecords" target="_blank" class="mt-6 inline-block px-6 py-3 bg-red-600 text-white font-bold rounded-lg shadow-lg hover:bg-red-500 transition-all text-2xl">
+                <a href="https://www.youtube.com/@JanesaysPalalalaRecords" target="_blank" class="mt-4 inline-block px-4 py-2 bg-red-600 text-white font-bold rounded-lg shadow-lg hover:bg-red-500 transition-all text-xl">
                     BGM by JANESAYS - Click to Listen!
                 </a>
-
-                <button id="restartButtonWin" class="mt-4 block w-4/5 mx-auto px-8 py-4 bg-orange-500 text-gray-900 font-bold rounded-lg shadow-lg hover:bg-orange-400 transition-all text-3xl title-font">
+                <button id="restartButtonWin" class="mt-3 block w-4/5 mx-auto px-6 py-3 bg-orange-500 text-gray-900 font-bold rounded-lg shadow-lg hover:bg-orange-400 transition-all text-2xl title-font">
                     GAME Link: Play Again!
                 </button>
             </div>
@@ -240,7 +227,8 @@
         // '기깔나는' 게임 보드 '가즈아!'
         const COLS = 10;
         const ROWS = 20;
-        const BLOCK_SIZE = 30; 
+        // ★★★ FIX: '기깔나는' '블록' '기깔나게' 100% '기깔나게' '기깔나게' '싹!' '기깔나게' 100% '기깔나게' '기깔나게' '축소' '가즈아!' (30 -> 24) ★★★
+        const BLOCK_SIZE = 24; // 240 / 10
 
         let board = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
         let score = 0;
@@ -274,6 +262,7 @@
             }
 
             draw() {
+                // ★★★ FIX: '기깔나는' '이모지' '기깔나게' 100% '기깔나게' '기깔나게' '싹!' '기깔나게' 100% '기깔나게' '기깔나게' '축소' '가즈아!' ★★★
                 ctx.font = `${BLOCK_SIZE * 0.9}px Arial`; 
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
@@ -403,6 +392,7 @@
         }
 
         function drawBoard() {
+            // ★★★ FIX: '기깔나는' '이모지' '기깔나게' 100% '기깔나게' '기깔나게' '싹!' '기깔나게' 100% '기깔나게' '기깔나게' '축소' '가즈아!' ★★★
             ctx.font = `${BLOCK_SIZE * 0.9}px Arial`; 
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
@@ -708,9 +698,6 @@
         // '기깔나는' '페이지' '기깔나게' 100% '기깔나게' '기깔나게' '로드' '기깔나게' 100% '기깔나게' '기깔나게' '시' '기깔나는' '설명서' '기깔나게' 100% '기깔나게' '기깔나게' '싹!' '기깔나게' 100% '기깔나게' '기깔나게' '보여주기'
         showInstructions();
         
-        // '기깔나는' '첫' '기깔나는' '클릭' '기깔나는' '음악' '기깔나는' '정책' ('기깔나는' 'READY!' '기깔나는' '버튼'으로 '기깔나게' 100% '기깔나게' '기깔나게' '이동')
-        // document.body.addEventListener('click', playMusicOnFirstInteraction);
-        // document.body.addEventListener('touchstart', playMusicOnFirstInteraction);
     </script>
 </body>
 </html>
