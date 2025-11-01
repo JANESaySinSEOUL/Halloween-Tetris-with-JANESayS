@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"> <!-- '기깔나는' 모바일 확대 방지! --><title>Halloween Specter Tetris</title>
     <!-- Tailwind CSS 로드 --><script src="https://cdn.tailwindcss.com"></script>
-    <!-- 기깔나는 할로윈 폰트 (Griffy) 로드 (더 귀여운 폰트로 변경!) --><link href="https://fonts.googleapis.com/css2?family=Griffy&display=swap" rel="stylesheet">
+    <!-- ★★★ NEW: '기깔나는' GenZ 폰트 '가즈아!' (Griffy + Gaegu!) ★★★ --><link href="https://fonts.googleapis.com/css2?family=Griffy&family=Gaegu:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Griffy', cursive; /* 폰트 변경! */
+            font-family: 'Griffy', cursive; /* '기깔나는' 영어 제목 폰트! */
             overflow: hidden; /* 스크롤 방지 */
             background: linear-gradient(180deg, #0d0a1a 0%, #310b4a 100%); /* 어둡고 보라색인 배경 */
             /* ★★★ NEW: '기깔나는' 모바일 터치 스크롤 '기깔나게' 싹! 방지 ★★★ */
@@ -21,9 +21,9 @@
             margin: 0 auto; /* ★★★ NEW: '기깔나는' 중앙 정렬 '가즈아!' ★★★ */
         }
         .hidden { display: none; }
-        /* 일반 텍스트용 폰트 (가독성) */
+        /* ★★★ NEW: '기깔나는' GenZ 한글 폰트 '가즈아!' (Gaegu) ★★★ */
         .normal-text {
-            font-family: 'Inter', sans-serif; /* Tailwind 기본 폰트 */
+            font-family: 'Gaegu', cursive; /* '기깔나는' GenZ 손글씨 폰트! */
         }
     </style>
 </head>
@@ -41,70 +41,69 @@
 
         <!-- 게임 캔버스 (이제 '기깔나게' 중앙 정렬!) --><canvas id="gameCanvas" width="300" height="600" class="rounded-lg"></canvas>
 
-        <!-- ★★★ NEW: '기깔나는' 부제 텍스트 수정 완료! ★★★ --><p class="text-2xl text-purple-300 mt-4">Moonlight Specters, 보름달이 뜨면 그들이 온다! 🌕</p>
-        <p class="text-2xl text-purple-300 mt-1">도전해볼래?</p> <!-- '기깔나는' 한 줄 더 추가! --><div class="mt-4 text-lime-400 text-xl">
+        <!-- ★★★ NEW: '기깔나는' 부제 텍스트 + '기깔나는' GenZ 폰트 '가즈아!' ★★★ --><p class="text-2xl text-purple-300 mt-4 normal-text">Moonlight Specters, 보름달이 뜨면 그들이 온다! 🌕</p>
+        <p class="text-2xl text-purple-300 mt-1 normal-text">도전해볼래?</p> <!-- '기깔나는' 한 줄 더 추가! --><div class="mt-4 text-lime-400 text-xl normal-text"> <!-- '기깔나는' GenZ 폰트 적용! -->
             Created by <a href="https://www.youtube.com/@JanesaysPalalalaRecords" target="_blank" class="hover:text-orange-500 underline">JANESayS</a>
             <p class="text-sm normal-text text-gray-400">(Click to listen to the original soundtrack!)</p>
         </div>
 
-        <!-- ★★★ '기깔나는' GenZ 환장 GameOver 페이지 '가즈아!' (수정 완료!) ★★★ --><div id="game-over" class="hidden absolute inset-0 bg-black bg-opacity-80 flex flex-col justify-center items-center text-center p-4">
-            <!-- NEW '기깔나는' GenZ 헤드라인! (승부욕 자극!) --><h2 class="text-7xl font-bold text-red-600">아.. 킹받네 🤬</h2>
+        <!-- ★★★ '기깔나는' GenZ 멘탈 회복 GameOver 페이지 '가즈아!' ★★★ --><div id="game-over" class="hidden absolute inset-0 bg-black bg-opacity-80 flex flex-col justify-center items-center text-center p-4">
             
-            <!-- 점수 --><p class="text-4xl mt-4">Score: <span id="finalScore">0</span></p>
+            <!-- '기깔나는' 멘탈 회복 헤드라인! --><h2 class="text-7xl font-bold text-lime-400 normal-text">다시 도전! 🔥<br>할 수 있어요!</h2>
+            
+            <!-- 점수 --><p class="text-4xl mt-4 normal-text">Score: <span id="finalScore">0</span></p>
     
-            <!-- ★★★ NEW: '기깔나는' JANESAYS 홍보! (수익화 '가즈아!') ★★★ --><div class="mt-6 text-2xl text-lime-400 normal-text">
-                <p>"스켈레탈의 세레나데"</p>
-                <p class="text-xl text-white">들으면서 멘탈 회복하고...</p>
-                <!-- '기깔나는' 유튜브 구독 버튼 --><a href="https://www.youtube.com/@JanesaysPalalalaRecords" target="_blank" class="mt-3 inline-block px-6 py-3 bg-red-600 text-white font-bold rounded-lg shadow-lg hover:bg-red-500 transition-all text-2xl">
-                    JANESAYS 구독 '가즈아!'
-                </a>
+            <!-- '기깔나는' 멘탈 회복 멘트! --><div class="mt-6 text-3xl text-white normal-text">
+                <p>Moonlight Specters는</p>
+                <p class="text-4xl text-purple-300">총 30 Level까지!</p>
+                <p class="mt-4">"스켈레탈 세레나데" 들으면서<br>멘탈 회복하고 다시?!</p>
             </div>
             
-            <!-- NEW '기깔나는' GenZ 재시작 버튼! --><button id="restartButton" class="mt-6 px-10 py-4 bg-orange-500 text-gray-900 font-bold rounded-lg shadow-lg hover:bg-orange-400 transition-all text-4xl">
-                다시 ㄱ?
+            <!-- '기깔나는' RESTART 버튼! --><button id="restartButton" class="mt-8 px-10 py-4 bg-orange-500 text-gray-900 font-bold rounded-lg shadow-lg hover:bg-orange-400 transition-all text-5xl normal-text">
+                RESTART!
             </button>
         </div>
 
         <div id="level-up" class="hidden absolute inset-0 bg-black bg-opacity-80 flex flex-col justify-center items-center text-center p-4">
             <div class="text-8xl mb-4">💀</div> 
-            <h2 class="text-6xl font-bold text-lime-400">LEVEL <span id="nextLevel">2</span></h2>
-            <p class="text-5xl mt-4 text-white">Are You Ready?</p>
+            <h2 class="text-6xl font-bold text-lime-400 normal-text">LEVEL <span id="nextLevel">2</span></h2>
+            <p class="text-5xl mt-4 text-white normal-text">Are You Ready?</p>
         </div>
 
         <!-- ★★★ '기깔나는' 최종 승리 페이지 (YOU WIN!) (Level 30 '가즈아!') ★★★ --><div id="game-win" class="hidden absolute inset-0 bg-black bg-opacity-80 flex flex-col justify-center items-center text-center p-4" style="background-image: url('moonlight_specters_final_image.jpg'); background-size: cover; background-position: center;">
             <!-- 메인 제목 --><h1 class="text-5xl font-bold text-white mb-2">Moonlight Specters</h1>
             
-            <!-- ★★★ NEW: '기깔나는' 영어 타이틀 '가즈아!' (수정 완료!) ★★★ --><h2 class="text-4xl font-bold text-purple-300 mt-4">ARE YOU THE NEXT</h2>
-            <h2 class="text-4xl font-bold text-purple-300 mt-1">SPECTER KING / QUEEN? 👑</h2>
+            <!-- ★★★ NEW: '기깔나는' 영어 타이틀 '가즈아!' ★★★ --><h2 class="text-4xl font-bold text-purple-300 mt-4 normal-text">ARE YOU THE NEXT</h2>
+            <h2 class="text-4xl font-bold text-purple-300 mt-1 normal-text">SPECTER KING / QUEEN? 👑</h2>
             
-            <!-- 최고 점수와 레벨 --><p class="text-4xl mt-6 text-lime-400">최고 점수: <span id="winScore">0</span></p>
-            <p class="text-4xl mt-2 text-lime-400">Level: <span id="winLevel">0</span></p>
+            <!-- 최고 점수와 레벨 --><p class="text-4xl mt-6 text-lime-400 normal-text">최고 점수: <span id="winScore">0</span></p>
+            <p class="text-4xl mt-2 text-lime-400 normal-text">Level: <span id="winLevel">0</span></p>
 
             <!-- 랭크별 몬스터 (이모지 대신 이미지를 넣어야 더 멋있지만, 일단 텍스트로 대체) --><div class="flex justify-around w-full max-w-sm mt-8">
                 <div class="flex flex-col items-center">
-                    <img src="https://i.ibb.co/q0Vv2Wq/skeleton-rank.png" alt="Skeleton Rank" class="w-20 h-20 mb-2"> <!-- 스켈레톤 이미지 --><span class="text-2xl text-white">RANK: SKELETON</span>
+                    <img src="https://i.ibb.co/q0Vv2Wq/skeleton-rank.png" alt="Skeleton Rank" class="w-20 h-20 mb-2"> <!-- 스켈레톤 이미지 --><span class="text-2xl text-white normal-text">RANK: SKELETON</span>
                 </div>
                 <div class="flex flex-col items-center">
-                    <img src="https://i.ibb.co/6P6Ld5s/spelyman-rank.png" alt="Spelyman Rank" class="w-20 h-20 mb-2"> <!-- 스펠리맨 이미지 --><span class="text-2xl text-white">RANK: SPELYMAN</span>
+                    <img src="https://i.ibb.co/6P6Ld5s/spelyman-rank.png" alt="Spelyman Rank" class="w-20 h-20 mb-2"> <!-- 스펠리맨 이미지 --><span class="text-2xl text-white normal-text">RANK: SPELYMAN</span>
                 </div>
             </div>
 
-            <!-- BGM by JANESAYS 홍보 버튼 --><a href="https://www.youtube.com/@JanesaysPalalalaRecords" target="_blank" class="mt-8 px-6 py-3 bg-red-600 text-white font-bold rounded-lg shadow-lg hover:bg-red-500 transition-all text-2xl">
+            <!-- BGM by JANESAYS 홍보 버튼 --><a href="https://www.youtube.com/@JanesaysPalalalaRecords" target="_blank" class="mt-8 px-6 py-3 bg-red-600 text-white font-bold rounded-lg shadow-lg hover:bg-red-500 transition-all text-2xl normal-text">
                 BGM by JANESAYS - Click to Listen!
             </a>
 
-            <!-- GAME Link (다시 시작) --><button id="restartButtonWin" class="mt-4 px-8 py-4 bg-orange-500 text-gray-900 font-bold rounded-lg shadow-lg hover:bg-orange-400 transition-all text-2xl">
+            <!-- GAME Link (다시 시작) --><button id="restartButtonWin" class="mt-4 px-8 py-4 bg-orange-500 text-gray-900 font-bold rounded-lg shadow-lg hover:bg-orange-400 transition-all text-2xl normal-text">
                 GAME Link: Play Again!
             </button>
             
-            <p class="text-xl text-gray-400 mt-8">THANK YOU FOR PLAYING!</p>
+            <p class="text-xl text-gray-400 mt-8 normal-text">THANK YOU FOR PLAYING!</p>
         </div>
 
         <!-- ★★★ NEW: '기깔나는' 1,000원 '양심 페이월' '가즈아!' (Paypal 1000원!) ★★★ --><div id="paywall-modal" class="hidden absolute inset-0 bg-black bg-opacity-90 flex flex-col justify-center items-center text-center p-4 z-20">
-            <h2 class="text-5xl font-bold text-lime-400">테트리스 꺠부시기? 🚀</h2>
-            <p class="text-3xl mt-4 text-white">국민고수 다 놔와서 실력을 보여주세요!</p>
+            <h2 class="text-5xl font-bold text-lime-400 normal-text">테트리스 꺠부시기? 🚀</h2>
+            <p class="text-3xl mt-4 text-white normal-text">국민고수 다 놔와서 실력을 보여주세요!</p>
             
-            <p class="text-2xl mt-6 text-purple-300">Level 10~30 '기깔나는' 고수 모드... '기깔나게' 도전?</p>
+            <p class="text-2xl mt-6 text-purple-300 normal-text">Level 10~30 '기깔나는' 고수 모드... '기깔나게' 도전?</p>
 
             <!-- ★★★ NEW: '기깔나는' Paypal 후원 버튼! '가즈아!' (수정 완료!) ★★★ --><a href="https://paypal.me/palalalarecordsJANE" target="_blank" class="mt-6 inline-block px-8 py-4 bg-yellow-400 text-black font-bold rounded-lg shadow-lg hover:bg-yellow-300 transition-all text-3xl normal-text">
                 JANESAYS 1,000원 'Paypal' 후원 '가즈아!' 🚀
